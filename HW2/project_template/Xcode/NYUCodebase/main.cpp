@@ -5,6 +5,9 @@
 #include <SDL_opengl.h>
 #include <SDL_image.h>
 #include "ShaderProgram.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 #ifdef _WINDOWS
 #define RESOURCE_FOLDER ""
@@ -16,9 +19,10 @@
 #define TORADIANS (PI/180.0)
 
 /*
- Had trouble making the ball bounce based on angle. Other elements of the game including y-axis and paddle
- collision are funcional and winner/loser based on whether ballX is passed paddleX and hits x-axis wall.
- Paddles can move up or down. Starting ball movement was not made to be random.
+ Had trouble making the ball bounce based on angle. Was unable to input the correct ball bounce angles.
+ The other elements of the game, including y-axis and paddle collision are funcional and winner/loser is 
+ decided based on whether ballX is passed paddleX and hits side border. Paddles can move up or down. 
+ Starting ball movement was made random between 4 different cases.
  */
 
 float player1X = -3.2f, player1Y = 0.0f;
@@ -38,7 +42,6 @@ bool collision(float ballX, float ballY, float ballwidth, float ballheight, floa
     if(ballX + ballwidth/2 <= playerX - playerwidth/2) return true;
     return false;
 }
-
 
 GLuint LoadTexture(const char *image_path) {
     SDL_Surface *surface = IMG_Load(image_path);
@@ -85,6 +88,16 @@ int main(int argc, char *argv[])
     GLuint ballTexture = LoadTexture("elementGlass005.png");
     
     float lastFrameTicks = 0.0f;
+    
+    //Random number generator in a ragne from 1 to 4
+    srand(time(NULL));
+    float randomnumber = rand() % 4 + 1;
+    
+    //Test cases
+    //float randomnumber = 1;
+    //float randomnumber = 2;
+    //float randomnumber = 3;
+    //float randomnumber = 4;
     
     SDL_Event event;
     bool done = false;
@@ -175,11 +188,29 @@ int main(int argc, char *argv[])
         program.setModelMatrix(modelMatrixBall);
         glBindTexture(GL_TEXTURE_2D, ballTexture);
         
-        //Start ball movmen was not made random
-        if(!bounceoff1 && !bounceoff2 && !hittop && !hitbot && ticks > 1.0){
-            ballX += ballXvel * elapsed;
-            ballY += ballYvel * elapsed;
-            modelMatrixBall.Translate(ballXvel * elapsed , ballYvel * elapsed, 0.0);
+        //Start ball movment is random based on RNG value
+        std::cout << randomnumber << std::endl;
+        if(!bounceoff1 && !bounceoff2 && !hittop && !hitbot && ticks > 1.0) {
+            if(randomnumber == 1) {
+                ballX += ballXvel * elapsed;
+                ballY += ballYvel * elapsed;
+                modelMatrixBall.Translate(ballXvel * elapsed , ballYvel * elapsed, 0.0);
+            }
+            else if(randomnumber == 2){
+                ballX -= ballXvel * elapsed;
+                ballY += ballYvel * elapsed;
+                modelMatrixBall.Translate(-ballXvel * elapsed , ballYvel * elapsed, 0.0);
+            }
+            else if(randomnumber == 3) {
+                ballX += ballXvel * elapsed;
+                ballY -= ballYvel * elapsed;
+                modelMatrixBall.Translate(ballXvel * elapsed , -ballYvel * elapsed, 0.0);
+            }
+            else if(randomnumber == 4) {
+                ballX -= ballXvel * elapsed;
+                ballY -= ballYvel * elapsed;
+                modelMatrixBall.Translate(-ballXvel * elapsed , -ballYvel * elapsed, 0.0);
+            }
         }
         
         //Paddle collision if statement
