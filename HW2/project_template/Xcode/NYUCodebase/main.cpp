@@ -106,7 +106,6 @@ int main(int argc, char *argv[])
             if (event.type == SDL_QUIT || event.type == SDL_WINDOWEVENT_CLOSE) {
                 done = true;
             }
-
         }
         
         //Loop
@@ -184,12 +183,11 @@ int main(int argc, char *argv[])
         
         glDrawArrays(GL_TRIANGLES, 0, 6);
 
-    //Ball setup
+    //Ball texture movement setup
         program.setModelMatrix(modelMatrixBall);
         glBindTexture(GL_TEXTURE_2D, ballTexture);
         
         //Start ball movment is random based on RNG value
-        std::cout << randomnumber << std::endl;
         if(!bounceoff1 && !bounceoff2 && !hittop && !hitbot && ticks > 1.0) {
             if(randomnumber == 1) {
                 ballX += ballXvel * elapsed;
@@ -212,7 +210,6 @@ int main(int argc, char *argv[])
                 modelMatrixBall.Translate(-ballXvel * elapsed , -ballYvel * elapsed, 0.0);
             }
         }
-        
         //Paddle collision if statement
         if(!collision(ballX, ballY, ballwidth, ballheight, player1X, player1Y, playerwidth, playerheight)) {
             bounceoff2 = false;
@@ -287,9 +284,8 @@ int main(int argc, char *argv[])
         
         /*
          All possible scenarios based of true/false conditions.
-         Was not able to get angles to work correctly.
-         Game starts with wrong first bounce off top wall and does a couple of correct bounces before being
-         stuck with a repeated bounce.
+         Was not able to get ball bounce angles to work correctly.
+         Ball will have reverse and repeated bounces.
         */
         
         if(player1win) {
