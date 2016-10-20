@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2EE727F41DB722C800758034 /* sheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EE727F31DB722C800758034 /* sheet.png */; };
-		2EE727F61DB722CC00758034 /* font1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EE727F51DB722CC00758034 /* font1.png */; };
+		2EE728041DB8573100758034 /* sheet.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EE728031DB8573100758034 /* sheet.png */; };
+		2EE728061DB8573800758034 /* font1.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EE728051DB8573800758034 /* font1.png */; };
 		6D5A86AE19AE5C710066C1FD /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6D5A86AD19AE5C710066C1FD /* Cocoa.framework */; };
 		6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6D5A86B619AE5C710066C1FD /* InfoPlist.strings */; };
 		6D5A86BA19AE5C710066C1FD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6D5A86B919AE5C710066C1FD /* main.cpp */; };
@@ -26,8 +26,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		2EE727F31DB722C800758034 /* sheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sheet.png; sourceTree = SOURCE_ROOT; };
-		2EE727F51DB722CC00758034 /* font1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = font1.png; sourceTree = SOURCE_ROOT; };
+		2EE728031DB8573100758034 /* sheet.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sheet.png; sourceTree = SOURCE_ROOT; };
+		2EE728051DB8573800758034 /* font1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = font1.png; sourceTree = SOURCE_ROOT; };
 		6D5A86AA19AE5C710066C1FD /* NYUCodebase.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NYUCodebase.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6D5A86AD19AE5C710066C1FD /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		6D5A86B019AE5C710066C1FD /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -124,8 +124,8 @@
 				6D5A86B519AE5C710066C1FD /* NYUCodebase-Info.plist */,
 				6D5A86B619AE5C710066C1FD /* InfoPlist.strings */,
 				6D5A86BC19AE5C710066C1FD /* Credits.rtf */,
-				2EE727F51DB722CC00758034 /* font1.png */,
-				2EE727F31DB722C800758034 /* sheet.png */,
+				2EE728051DB8573800758034 /* font1.png */,
+				2EE728031DB8573100758034 /* sheet.png */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -219,10 +219,10 @@
 				6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */,
 				6DEF23C11B96CC2600BCE792 /* fragment.glsl in Resources */,
 				6DE9D2F11BA6AB8C002D599C /* fragment_textured.glsl in Resources */,
-				2EE727F61DB722CC00758034 /* font1.png in Resources */,
+				2EE728061DB8573800758034 /* font1.png in Resources */,
 				6D5A86C619AE5C710066C1FD /* Images.xcassets in Resources */,
 				6D5A86BE19AE5C710066C1FD /* Credits.rtf in Resources */,
-				2EE727F41DB722C800758034 /* sheet.png in Resources */,
+				2EE728041DB8573100758034 /* sheet.png in Resources */,
 				6DEF23C41B96CC2600BCE792 /* vertex.glsl in Resources */,
 				6DC7076A1BA7273500225B7D /* vertex_textured.glsl in Resources */,
 			);

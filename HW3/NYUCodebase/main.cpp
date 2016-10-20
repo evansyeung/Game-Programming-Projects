@@ -17,6 +17,15 @@
 #define PI 3.1415926536
 #define TORADIANS (PI/180.0)
 
+/*
+ Evans Yeung
+ HW3 Space Invader
+ 
+ There are 3 games states: STATE_MAIN_MENU, STATE_GAME_LEVEL, STATE_GAME_END. Pressing any key will switch the menu state to game level. The player can move up, down, left, right and shoot with space. Colliding with enemy invaders results in transitioning to the game end state. Each invader shot down will add 100 points to the score. If the score reachse 2100, then the player wil transition to the game end states.
+ 
+ Problems: Had trouble implementing the bullets. There is only one bullet that the player can shoot and enemys do not shoot bullets. Sometimes if the bullets get past the first two row of enemies and hits the top enemy, all enemies in the column will disappear.
+ */
+
 float friction = 3.0;
 int score = 0, bullet_header = 0;
 bool playerShot = false, start1Moving = true, start2Moving = true, start3Moving = true, row1HitRight = false, row1HitLeft = false, row2HitRight = false, row2HitLeft = false, row3HitRight = false, row3HitLeft = false;
@@ -36,7 +45,6 @@ GLuint LoadTexture(const char *image_path) {
     return textureID;
 }
 
-//Added extra parameters to change vertices
 class SheetSprite {
 public:
     SheetSprite();
@@ -50,6 +58,7 @@ public:
         float height;
 };
 
+//Added extra parameter to change polygon vertices
 void SheetSprite::Draw(ShaderProgram *program, float polygonX, float polygonY, float q) {
     glBindTexture(GL_TEXTURE_2D, textureID);
     GLfloat texCoords[] = {
@@ -62,7 +71,7 @@ void SheetSprite::Draw(ShaderProgram *program, float polygonX, float polygonY, f
     };
     float aspect = width / height;
     
-    //Changed to 1.0 from 0.5 for all values
+    //Changed to variables from 0.5 for all values
     float vertices[] = {
         -polygonX * size * aspect + q, -polygonY * size,
         polygonX * size * aspect + q, polygonY * size,
@@ -71,7 +80,6 @@ void SheetSprite::Draw(ShaderProgram *program, float polygonX, float polygonY, f
         -polygonX * size * aspect + q, -polygonY * size ,
         polygonX * size * aspect + q, -polygonY * size};
     
-    //std::cout << (-polygonX * size * aspect) << " " << (-polygonY * size) << std::endl;
     // draw our arrays
     
     glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertices);
@@ -79,7 +87,9 @@ void SheetSprite::Draw(ShaderProgram *program, float polygonX, float polygonY, f
     
     glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoords);
     glEnableVertexAttribArray(program->texCoordAttribute);
+    
     glDrawArrays(GL_TRIANGLES, 0, 6);
+    
     glDisableVertexAttribArray(program->positionAttribute);
     glDisableVertexAttribArray(program->texCoordAttribute);
 }
@@ -197,6 +207,7 @@ int main(int argc, char *argv[])
     Entity* player = new Entity(playerPosition, playerVelocity, playerSize, playerSprite, false);
     
     //Bullet Setup
+    //Was not sure how to array to hold bullets
     Vector3 bulletPosition(0.0f, 0.0f, 0.0f);
     Vector3 bulletVelocity(2.5f, 2.5f, 0.0);
     Vector3 bulletSize(0.0f, 0.0f, 0.0f);
@@ -254,7 +265,6 @@ int main(int argc, char *argv[])
         bullets[i]->position.y += -2.0;
     }
 
-    
     enemiesRow1[0]->position.x += -2.8;
     enemiesRow1[1]->position.x += -1.8;
     enemiesRow1[2]->position.x += -0.8;
@@ -287,7 +297,6 @@ int main(int argc, char *argv[])
     for(int q = 0; q < enemiesRow3.size(); q++) {
         enemiesRow3[q]->position.y += 0.7;
     }
-    
     
     int state = STATE_MAIN_MENU;
     
@@ -326,7 +335,7 @@ int main(int argc, char *argv[])
                 
                 //Game Name Texture
                 program.setModelMatrix(modelGameName);
-                DrawText(&program, fontTexture, "Space Invaders", 0.3, 0);
+                DrawText(&program, fontTexture, "Space Invader", 0.3, 0);
                 
                 //Press Button Texture
                 program.setModelMatrix(modelPressButton);
@@ -347,8 +356,7 @@ int main(int argc, char *argv[])
                     }
                     else {
                         player->position.y += player->velocity.y * elapsed;
-                        modelPlayer.Translate(0.0, player->velocity.y * elapsed, 0.0);
-                        //std::cout << player->position.y << std::endl;
+                        modelPlayer.Translate(0.0, player->velocity.y * elapsed, 0.0);;
                     }
                 }else if(keys[SDL_SCANCODE_DOWN]) {
                     if(player->position.y - player->size.y/2 <= -1.65) {
@@ -357,7 +365,6 @@ int main(int argc, char *argv[])
                     else {
                         player->position.y -= player->velocity.y * elapsed;
                         modelPlayer.Translate(0.0, -player->velocity.y * elapsed, 0.0);
-                        //std::cout << player->position.y << std::endl;
                     }
                 }else if(keys[SDL_SCANCODE_LEFT]) {
                     if(player->position.x - player->size.x/2 <= -3.5) {
@@ -383,7 +390,7 @@ int main(int argc, char *argv[])
                 
                 std::cout << "Bullet x: " << bullets[bullet_header]->position.x << " y: " << bullets[bullet_header]->position.y << std::endl;
                 
-                //Uses the dead flag to check if the bullet has not been shot. Moves bullet to x position of player
+                //Uses the playerShot to check if the bullet has not been shot. Moves bullet to player's x position.
                 if(bullets[bullet_header]->position.x != player->position.x && !playerShot){
                     if(bullets[bullet_header]->position.x <= player->position.x) {
                         bullets[bullet_header]->position.x += bullets[bullet_header]->velocity.x * elapsed;
@@ -394,7 +401,7 @@ int main(int argc, char *argv[])
                     }
                 }
                 
-                //Uses the dead flag to check if the bullet has not been shot. Moves bullet to y position above the player
+                //Uses the dead flag to check if the bullet has not been shot. Moves bullet to player's y position.
                 if(bullets[bullet_header]->position.y != player->position.y && !playerShot){
                     if(bullets[bullet_header]->position.y <= player->position.y + player->size.y/2) {
                         bullets[bullet_header]->position.y += bullets[bullet_header]->velocity.y * elapsed;
@@ -405,7 +412,7 @@ int main(int argc, char *argv[])
                     }
                 }
                 
-                
+                //Checks if the bullet had been shot. If it has then it will increase its y value until it hits the screen's top border. When it hits the top border, the bullet will return to the players x & y position.
                 if(playerShot) {
                     bullets[bullet_header]->sprite.Draw(&program, 0.5, 0.5, 0.0);
                     bullets[bullet_header]->dead = false;
@@ -415,116 +422,94 @@ int main(int argc, char *argv[])
                 
                 if(bullets[bullet_header]->position.y + bullets[bullet_header]->size.y >= 2.0) {
                     playerShot = false;
-                    //std::cout << bullet_header << std::endl;
                 }
             
-            //Bullet Collision testing
+            //Bullet Enemy Collision testing
                 if(!collision(*enemiesRow1[0], *bullets[bullet_header]) && !enemiesRow1[0]->dead) {
                     enemiesRow1[0]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow1[1], *bullets[bullet_header]) && !enemiesRow1[1]->dead) {
                     enemiesRow1[1]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow1[2], *bullets[bullet_header]) && !enemiesRow1[2]->dead) {
                     enemiesRow1[2]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow1[3], *bullets[bullet_header]) && !enemiesRow1[3]->dead) {
                     enemiesRow1[3]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }
                 else if(!collision(*enemiesRow1[4], *bullets[bullet_header]) && !enemiesRow1[4]->dead) {
                     enemiesRow1[4]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow1[5], *bullets[bullet_header]) && !enemiesRow1[5]->dead) {
                     enemiesRow1[5]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow1[6], *bullets[bullet_header]) && !enemiesRow1[6]->dead) {
                     enemiesRow1[6]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow2[0], *bullets[bullet_header]) && !enemiesRow2[0]->dead) {
                     enemiesRow2[0]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow2[1], *bullets[bullet_header]) && !enemiesRow2[1]->dead) {
                     enemiesRow2[1]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow2[2], *bullets[bullet_header]) && !enemiesRow2[2]->dead) {
                     enemiesRow2[2]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow2[3], *bullets[bullet_header]) && !enemiesRow2[3]->dead) {
                     enemiesRow2[3]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow2[4], *bullets[bullet_header]) && !enemiesRow2[4]->dead) {
                     enemiesRow2[4]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow2[5], *bullets[bullet_header]) && !enemiesRow2[5]->dead) {
                     enemiesRow2[5]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow2[6], *bullets[bullet_header]) && !enemiesRow2[6]->dead) {
                     enemiesRow2[6]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow3[0], *bullets[bullet_header]) && !enemiesRow3[0]->dead) {
                     enemiesRow3[0]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow3[1], *bullets[bullet_header]) && !enemiesRow3[1]->dead) {
                     enemiesRow3[1]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow3[2], *bullets[bullet_header]) && !enemiesRow3[2]->dead) {
                     enemiesRow3[2]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow3[3], *bullets[bullet_header]) && !enemiesRow3[3]->dead) {
                     enemiesRow3[3]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow3[4], *bullets[bullet_header]) && !enemiesRow3[4]->dead) {
                     enemiesRow3[4]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow3[5], *bullets[bullet_header]) && !enemiesRow3[5]->dead) {
                     enemiesRow3[5]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }else if(!collision(*enemiesRow3[6], *bullets[bullet_header]) && !enemiesRow3[6]->dead) {
                     enemiesRow3[6]->dead = true;
                     score += 100;
                     playerShot = false;
-                    //bullets[bullet_header]->dead = true;
                 }
                 
         //Enemy Model
