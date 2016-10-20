@@ -310,7 +310,6 @@ int main(int argc, char *argv[])
                 state = STATE_GAME_LEVEL;
             }else if(event.type == SDL_KEYDOWN && state == STATE_GAME_LEVEL) {
                 if(event.key.keysym.scancode == SDL_SCANCODE_SPACE) {
-                    std::cout << "Shoot!\n";
                     playerShot = true;
                 }
             }
@@ -347,7 +346,8 @@ int main(int argc, char *argv[])
             //Player model
                 program.setModelMatrix(modelPlayer);
                 player->sprite.Draw(&program, 1.0, 1.0, 0.0);
-                std::cout << "Player x: " << player->position.x << " y: " << player->position.y << std::endl;
+                
+                //std::cout << "Player x: " << player->position.x << " y: " << player->position.y << std::endl;
             
                 //Player & Bullet movement
                 if(keys[SDL_SCANCODE_UP]) {
@@ -388,7 +388,7 @@ int main(int argc, char *argv[])
             //Bullet Model
                 program.setModelMatrix(modelBullet);
                 
-                std::cout << "Bullet x: " << bullets[bullet_header]->position.x << " y: " << bullets[bullet_header]->position.y << std::endl;
+                //std::cout << "Bullet x: " << bullets[bullet_header]->position.x << " y: " << bullets[bullet_header]->position.y << std::endl;
                 
                 //Uses the playerShot to check if the bullet has not been shot. Moves bullet to player's x position.
                 if(bullets[bullet_header]->position.x != player->position.x && !playerShot){
