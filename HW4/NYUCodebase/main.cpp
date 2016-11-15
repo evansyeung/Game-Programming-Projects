@@ -4,7 +4,7 @@
  
  There are 3 platforms for the player to jump on. 
  I was not sure how to get the player scrolling to work.
- The view has to be manually adjusted to see the last world platform on the right. 
+ Scrolling will automatically move the screen on a fixed value.
  Player can sometimes sink through static tiles while on elevated tiles. While on the lowest level tiles, player will stay above tile.
  X collision was not fully implemented.
  Sound was implemented for background music and jump.
@@ -34,7 +34,6 @@ float enemyaccelerationX = 0.01f;
 float friction = 2.0;
 bool moveSPACE = false, moveDOWN = false, moveLEFT = false, moveRIGHT = false;
 float adjustY = 0.0f, adjustX = 0.0f;
-bool top = false, bottom = false, left = false, right = false;
 float y_distance = 0.0f, x_distance = 0.0f;
 float gravity = 3.0f;
 float penetration = 0.0f;
@@ -246,9 +245,6 @@ int main(int argc, char *argv[])
     //viewMatrix.Translate(-player->position.x, -player->position.y, 0.0);
     viewMatrix.Translate(-10.0, 5.0, 0.0);
     
-//To view last platform out of the screen
-    //viewMatrix.Translate(-19.0, 5.0, 0.0);
-    
     SDL_Event event;
     bool done = false;
     while (!done) {
@@ -272,6 +268,8 @@ int main(int argc, char *argv[])
             }
         }
         //Loop
+        
+        viewMatrix.Translate(-player->position.x * 0.001, 0.0, 0.0);
         glClear(GL_COLOR_BUFFER_BIT);
     
         const Uint8 *keys = SDL_GetKeyboardState(NULL);
@@ -383,6 +381,16 @@ int main(int argc, char *argv[])
         DrawSpriteSheetSprite(&program, spritesheet, cloudtile5, 113, 16, 8);
         float cloudtile6[] = {11.0, -4.0, 12.0, -3.0, 11.0, -3.0, 12.0, -3.0, 11.0, -4.0, 12.0, -4.0};
         DrawSpriteSheetSprite(&program, spritesheet, cloudtile6, 114, 16, 8);
+        float cloudtile7[] = {18.0, -5.0, 19.0, -4.0, 18.0, -4.0, 19.0, -4.0, 18.0, -5.0, 19.0, -5.0};
+        DrawSpriteSheetSprite(&program, spritesheet, cloudtile7, 96, 16, 8);
+        float cloudtile8[] = {19.0, -5.0, 20.0, -4.0, 19.0, -4.0, 20.0, -4.0, 19.0, -5.0, 20.0, -5.0};
+        DrawSpriteSheetSprite(&program, spritesheet, cloudtile8, 97, 16, 8);
+        float cloudtile9[] = {23.0, -3.0, 24.0, -2.0, 23.0, -2.0, 24.0, -2.0, 23.0, -3.0, 24.0, -3.0};
+        DrawSpriteSheetSprite(&program, spritesheet, cloudtile9, 113, 16, 8);
+        float cloudtile10[] = {24.0, -3.0, 25.0, -2.0, 24.0, -2.0, 25.0, -2.0, 24.0, -3.0, 25.0, -3.0};
+        DrawSpriteSheetSprite(&program, spritesheet, cloudtile10, 114, 16, 8);
+        float cloudtile11[] = {14.0, -1.5, 15.0, -0.5, 14.0, -0.5, 15.0, -0.5, 14.0, -1.5, 15.0, -1.5};
+        DrawSpriteSheetSprite(&program, spritesheet, cloudtile11, 115, 16, 8);
         
         float treetile1[] = {7.0, -7.0, 8.0, -6.0, 7.0, -6.0, 8.0, -6.0, 7.0, -7.0, 8.0, -7.0};
         DrawSpriteSheetSprite(&program, spritesheet, treetile1, 119, 16, 8);
@@ -486,7 +494,6 @@ int main(int argc, char *argv[])
             modelMatrix.Translate(0.0, adjustY + 0.01, 0.0);
             player->position.y += adjustY + 0.01;
         }
-
         if(!collision(*enemy1, *player, true, false)) {
             std::cout << "Game Over\n";
         }
