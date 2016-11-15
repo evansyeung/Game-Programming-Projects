@@ -68,7 +68,6 @@ int main(int argc, char *argv[])
                 done = true;
             }
         }
-        glClear(GL_COLOR_BUFFER_BIT);
         
         //Loop
         glClearColor(1.0, 0.0, 0.5, 1.0);   //Changes background to pink
