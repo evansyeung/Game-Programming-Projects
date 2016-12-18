@@ -10,12 +10,26 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NYUCodebase/main.cpp"
-            timestampString = "503649284.547915"
+            timestampString = "503788764.731023"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "313"
-            endingLineNumber = "313"
-            landmarkName = "worldToTileCoordinates(float worldX, float worldY, int *gridX, int *gridY)"
+            startingLineNumber = "112"
+            endingLineNumber = "112">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NYUCodebase/main.cpp"
+            timestampString = "503788764.731023"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "401"
+            endingLineNumber = "401"
+            landmarkName = "collisionXRight(Platform world, Entity player)"
             landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
@@ -26,11 +40,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NYUCodebase/main.cpp"
-            timestampString = "503649284.547915"
+            timestampString = "503795686.960994"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "101"
-            endingLineNumber = "101">
+            startingLineNumber = "787"
+            endingLineNumber = "787"
+            landmarkName = "main(int argc, char *argv[])"
+            landmarkType = "9">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
