@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E07CEC61E07AC6C00869C63 /* CampFireFinished.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E07CEC51E07AC6B00869C63 /* CampFireFinished.png */; };
+		2E07CEC81E07B28A00869C63 /* SawSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E07CEC71E07B28A00869C63 /* SawSmall.png */; };
+		2E07CECA1E0857BF00869C63 /* jump.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2E07CEC91E0857BF00869C63 /* jump.wav */; };
+		2E07CECC1E08589900869C63 /* hit.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2E07CECB1E08589900869C63 /* hit.wav */; };
+		2E07CECE1E08589E00869C63 /* firehit.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2E07CECD1E08589E00869C63 /* firehit.wav */; };
+		2E07CED01E0858A300869C63 /* pickup.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2E07CECF1E0858A300869C63 /* pickup.wav */; };
+		2E07CED21E085E1800869C63 /* Road_to_Dazir.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2E07CED11E085E1800869C63 /* Road_to_Dazir.wav */; };
+		2E07CEDE1E08908600869C63 /* heart_full.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E07CEDD1E08908600869C63 /* heart_full.png */; };
+		2E07CEE21E0890CB00869C63 /* heart_empty.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E07CEE11E0890CB00869C63 /* heart_empty.png */; };
 		2E18E6CE1E04C1F9003E7609 /* platformertiles.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E18E6CD1E04C1F9003E7609 /* platformertiles.png */; };
 		2E18E6D01E04EC33003E7609 /* characters_3.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E18E6CF1E04EC33003E7609 /* characters_3.png */; };
 		2EB257721E05D9CA00600E95 /* pixel_font.png in Resources */ = {isa = PBXBuildFile; fileRef = 2EB257711E05D9CA00600E95 /* pixel_font.png */; };
@@ -29,6 +38,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2E07CEC51E07AC6B00869C63 /* CampFireFinished.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CampFireFinished.png; sourceTree = SOURCE_ROOT; };
+		2E07CEC71E07B28A00869C63 /* SawSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SawSmall.png; sourceTree = SOURCE_ROOT; };
+		2E07CEC91E0857BF00869C63 /* jump.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = jump.wav; sourceTree = SOURCE_ROOT; };
+		2E07CECB1E08589900869C63 /* hit.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = hit.wav; sourceTree = SOURCE_ROOT; };
+		2E07CECD1E08589E00869C63 /* firehit.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = firehit.wav; sourceTree = SOURCE_ROOT; };
+		2E07CECF1E0858A300869C63 /* pickup.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = pickup.wav; sourceTree = SOURCE_ROOT; };
+		2E07CED11E085E1800869C63 /* Road_to_Dazir.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Road_to_Dazir.wav; sourceTree = SOURCE_ROOT; };
+		2E07CEDD1E08908600869C63 /* heart_full.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart_full.png; sourceTree = SOURCE_ROOT; };
+		2E07CEE11E0890CB00869C63 /* heart_empty.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = heart_empty.png; sourceTree = SOURCE_ROOT; };
 		2E18E6CD1E04C1F9003E7609 /* platformertiles.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = platformertiles.png; sourceTree = SOURCE_ROOT; };
 		2E18E6CF1E04EC33003E7609 /* characters_3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = characters_3.png; sourceTree = SOURCE_ROOT; };
 		2EB257711E05D9CA00600E95 /* pixel_font.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = pixel_font.png; sourceTree = SOURCE_ROOT; };
@@ -132,7 +150,16 @@
 				6D5A86B519AE5C710066C1FD /* NYUCodebase-Info.plist */,
 				6D5A86B619AE5C710066C1FD /* InfoPlist.strings */,
 				6D5A86BC19AE5C710066C1FD /* Credits.rtf */,
+				2E07CEC91E0857BF00869C63 /* jump.wav */,
+				2E07CECB1E08589900869C63 /* hit.wav */,
+				2E07CECD1E08589E00869C63 /* firehit.wav */,
+				2E07CED11E085E1800869C63 /* Road_to_Dazir.wav */,
+				2E07CECF1E0858A300869C63 /* pickup.wav */,
+				2E07CEE11E0890CB00869C63 /* heart_empty.png */,
+				2E07CEDD1E08908600869C63 /* heart_full.png */,
 				2EB257711E05D9CA00600E95 /* pixel_font.png */,
+				2E07CEC71E07B28A00869C63 /* SawSmall.png */,
+				2E07CEC51E07AC6B00869C63 /* CampFireFinished.png */,
 				2EB257731E05E70300600E95 /* ruby2.png */,
 				2E18E6CF1E04EC33003E7609 /* characters_3.png */,
 				2E18E6CD1E04C1F9003E7609 /* platformertiles.png */,
@@ -226,16 +253,25 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E07CEC61E07AC6C00869C63 /* CampFireFinished.png in Resources */,
+				2E07CEC81E07B28A00869C63 /* SawSmall.png in Resources */,
+				2E07CECE1E08589E00869C63 /* firehit.wav in Resources */,
 				2E18E6CE1E04C1F9003E7609 /* platformertiles.png in Resources */,
+				2E07CEE21E0890CB00869C63 /* heart_empty.png in Resources */,
+				2E07CED21E085E1800869C63 /* Road_to_Dazir.wav in Resources */,
 				2EB257741E05E70300600E95 /* ruby2.png in Resources */,
 				6D5A86B819AE5C710066C1FD /* InfoPlist.strings in Resources */,
+				2E07CED01E0858A300869C63 /* pickup.wav in Resources */,
 				6DEF23C11B96CC2600BCE792 /* fragment.glsl in Resources */,
 				2E18E6D01E04EC33003E7609 /* characters_3.png in Resources */,
 				6DE9D2F11BA6AB8C002D599C /* fragment_textured.glsl in Resources */,
 				6D5A86C619AE5C710066C1FD /* Images.xcassets in Resources */,
 				6D5A86BE19AE5C710066C1FD /* Credits.rtf in Resources */,
+				2E07CECA1E0857BF00869C63 /* jump.wav in Resources */,
 				6DEF23C41B96CC2600BCE792 /* vertex.glsl in Resources */,
+				2E07CECC1E08589900869C63 /* hit.wav in Resources */,
 				6DC7076A1BA7273500225B7D /* vertex_textured.glsl in Resources */,
+				2E07CEDE1E08908600869C63 /* heart_full.png in Resources */,
 				2EB257721E05D9CA00600E95 /* pixel_font.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
