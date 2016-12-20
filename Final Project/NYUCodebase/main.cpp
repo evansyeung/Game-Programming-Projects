@@ -55,7 +55,7 @@ int currentIndexFire = 0;
 int health = 3;
 float friction = 2.0f;
 float gravity = 2.0f;
-float gravity2 = 3.0f;
+float gravity2 = 2.75f;
 float penetration = 0.0f;
 float y_distance, x_distance;
 float adjustY, adjustX;
@@ -64,7 +64,7 @@ bool onFloor = false, moveJump = false, moveDown = false, moveLeft = false, move
 int score = 0;
 bool temp = true;
 
-enum GameState { STATE_MAIN_MENU, STATE_GAME_LEVEL1, STATE_PAUSE1, STATE_GAME_LEVEL2, STATE_GAME_LEVEL3, STATE_GAME_END };
+enum GameState { STATE_MAIN_MENU, STATE_GAME_LEVEL1, STATE_PAUSE1, STATE_GAME_LEVEL2, STATE_PAUSE2, STATE_GAME_LEVEL3, STATE_GAME_END };
 int state = STATE_MAIN_MENU;
 
 float lastFrameTicks = 0.0f;
@@ -597,6 +597,7 @@ int main(int argc, char *argv[])
     Matrix modelMatrixGameName;
     Matrix modelMatrixPressButton;
     Matrix modelMatrixPause;
+    Matrix modelMatrixPause2;
     Matrix modelMatrixPlayer;
     Matrix modelMatrixPlayer2;
     Matrix modelMatrixEnemy1;
@@ -611,18 +612,30 @@ int main(int argc, char *argv[])
     Matrix modelMatrixSaw18;
     Matrix modelMatrixSaw32;
     Matrix modelMatrixSaw33;
+    Matrix modelMatrixSaw34;
+    Matrix modelMatrixSaw35;
+    Matrix modelMatrixSaw36;
+    Matrix modelMatrixSaw37;
     Matrix modelMatrixSaw;
     Matrix modelMatrixRuby;
     Matrix modelMatrixScoreHealth;
+    Matrix modelMatrixScoreHealth2;
+    Matrix modelMatrixGameOver;
+    Matrix modelMatrixEndScore;
     Matrix viewMatrix;
     
     //Reposition the position of state menu text
     modelMatrixGameName.Translate(-0.5, 0.5, 0.0);
     modelMatrixPause.Translate(-2.0, 0.5, 0.0);
+    modelMatrixPause2.Translate(-2.5, 0.5, 0.0);
     modelMatrixPressButton.Translate(-2.2, -1.0, 0.0);
+    modelMatrixGameOver.Translate(-1.5, 0.5, 0.0);
+    modelMatrixEndScore.Translate(-1.25, -.25, 0.0);
     
-    //Reposition score;
+    //Reposition score/health
     modelMatrixScoreHealth.Translate(0.5, -9.5, 0.0);
+    modelMatrixScoreHealth2.Translate(3.0, -3.25, 0.0);
+    
     
     //modelMatrixBackGround2.Translate(54.0, -7, 0.0);
     
@@ -717,12 +730,12 @@ int main(int argc, char *argv[])
     
     //Enemies
     Vector3 enemy1Position(18.25f, -6.75f, 0.0f);
-    Vector3 enemy1Velocity(0.02f, 0.02f, 0.0f);
+    Vector3 enemy1Velocity(1.5f, .0f, 0.0f);
     Vector3 enemy1Size(0.1f, 0.1f, 0.0f);
     Entity* enemy1 = new Entity(enemy1Position, enemy1Velocity, enemy1Size);
     
     Vector3 enemy2Position(24.25, -6.75f, 0.0f);
-    Vector3 enemy2Velocity(-0.02f, 0.0f, 0.0f);
+    Vector3 enemy2Velocity(-1.5f, 0.0f, 0.0f);
     Vector3 enemy2Size(0.1f, 0.1f, 0.0f);
     Entity* enemy2 = new Entity(enemy2Position, enemy2Velocity, enemy2Size);
     
@@ -732,27 +745,27 @@ int main(int argc, char *argv[])
     Entity* enemy3 = new Entity(enemy3Position, enemy3Velocity, enemy3Size);
     
     Vector3 enemy4Position(31.75, -5.0, 0.0f);
-    Vector3 enemy4Velocity(0.03f, 0.0f, 0.0f);
+    Vector3 enemy4Velocity(1.85f, 0.0f, 0.0f);
     Vector3 enemy4Size(0.1f, 0.1f, 0.0f);
     Entity* enemy4 = new Entity(enemy4Position, enemy4Velocity, enemy4Size);
     
     Vector3 enemy5Position(43.75, -5.25, 0.0f);
-    Vector3 enemy5Velocity(0.02f, 0.0f, 0.0f);
+    Vector3 enemy5Velocity(1.5f, 0.0f, 0.0f);
     Vector3 enemy5Size(0.5f, 0.5f, 0.0f);
     Entity* enemy5 = new Entity(enemy5Position, enemy5Velocity, enemy5Size);
     
     Vector3 enemy6Position(47.25, -5.25, 0.0f);
-    Vector3 enemy6Velocity(0.03f, 0.0f, 0.0f);
+    Vector3 enemy6Velocity(1.75f, 0.0f, 0.0f);
     Vector3 enemy6Size(0.05f, 0.05f, 0.0f);
     Entity* enemy6 = new Entity(enemy6Position, enemy6Velocity, enemy6Size);
     
     Vector3 enemy7Position(44.25, -5.25, 0.0f);
-    Vector3 enemy7Velocity(0.03f, 0.0f, 0.0f);
+    Vector3 enemy7Velocity(1.75f, 0.0f, 0.0f);
     Vector3 enemy7Size(0.05f, 0.05f, 0.0f);
     Entity* enemy7 = new Entity(enemy7Position, enemy7Velocity, enemy7Size);
     
     Vector3 enemy8Position(48.25, -5.25, 0.0f);
-    Vector3 enemy8Velocity(-0.02f, 0.0f, 0.0f);
+    Vector3 enemy8Velocity(-1.5f, 0.0f, 0.0f);
     Vector3 enemy8Size(0.05f, 0.05f, 0.0f);
     Entity* enemy8 = new Entity(enemy8Position, enemy8Velocity, enemy8Size);
     
@@ -1187,11 +1200,31 @@ int main(int argc, char *argv[])
     Vector3 saw25Velocity(0.0f, 0.0f, 0.0f);
     Vector3 saw25Size(0.75f, 0.75f, 0.0f);
     Entity* saw25 = new Entity(saw25Position, saw25Velocity, saw25Size);
-    
+   
     Vector3 saw26Position(7.75, -37.5, 0.0f);
     Vector3 saw26Velocity(0.0f, 0.0f, 0.0f);
     Vector3 saw26Size(0.75f, 0.75f, 0.0f);
     Entity* saw26 = new Entity(saw26Position, saw26Velocity, saw26Size);
+    
+    Vector3 saw27Position(8.75, -38.5, 0.0f);
+    Vector3 saw27Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw27Size(0.75f, 0.75f, 0.0f);
+    Entity* saw27 = new Entity(saw27Position, saw27Velocity, saw27Size);
+    
+    Vector3 saw28Position(10.75, -38.5, 0.0f);
+    Vector3 saw28Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw28Size(0.75f, 0.75f, 0.0f);
+    Entity* saw28 = new Entity(saw28Position, saw28Velocity, saw28Size);
+    
+    Vector3 saw29Position(10.75, -39.75, 0.0f);
+    Vector3 saw29Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw29Size(0.75f, 0.75f, 0.0f);
+    Entity* saw29 = new Entity(saw29Position, saw29Velocity, saw29Size);
+    
+    Vector3 saw30Position(10.75, -41.0, 0.0f);
+    Vector3 saw30Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw30Size(0.75f, 0.75f, 0.0f);
+    Entity* saw30 = new Entity(saw30Position, saw30Velocity, saw30Size);
     
     Vector3 saw32Position(7.75, -43.0, 0.0f);
     Vector3 saw32Velocity(2.0f, 0.0f, 0.0f);
@@ -1203,6 +1236,40 @@ int main(int argc, char *argv[])
     Vector3 saw33Size(0.75f, 0.75f, 0.0f);
     Entity* saw33 = new Entity(saw33Position, saw33Velocity, saw33Size);
     
+    Vector3 saw34Position(7.25, -45.0, 0.0f);
+    Vector3 saw34Velocity(3.0f, 0.0f, 0.0f);
+    Vector3 saw34Size(0.75f, 0.75f, 0.0f);
+    Entity* saw34 = new Entity(saw34Position, saw34Velocity, saw34Size);
+    
+    Vector3 saw35Position(12.25, -46.25, 0.0f);
+    Vector3 saw35Velocity(-3.0f, 0.0f, 0.0f);
+    Vector3 saw35Size(0.75f, 0.75f, 0.0f);
+    Entity* saw35 = new Entity(saw35Position, saw35Velocity, saw35Size);
+    
+    Vector3 saw36Position(10.15, -53.0, 0.0f);
+    Vector3 saw36Velocity(0.0f, -3.0f, 0.0f);
+    Vector3 saw36Size(0.75f, 0.75f, 0.0f);
+    Entity* saw36 = new Entity(saw36Position, saw36Velocity, saw36Size);
+    
+    Vector3 saw37Position(7.75, -54.5, 0.0f);
+    Vector3 saw37Velocity(0.0f, -3.0f, 0.0f);
+    Vector3 saw37Size(0.75f, 0.75f, 0.0f);
+    Entity* saw37 = new Entity(saw37Position, saw37Velocity, saw37Size);
+    
+    Vector3 saw38Position(9.0, -54.5, 0.0f);
+    Vector3 saw38Velocity(0.0f, -3.0f, 0.0f);
+    Vector3 saw38Size(0.75f, 0.75f, 0.0f);
+    Entity* saw38 = new Entity(saw38Position, saw38Velocity, saw38Size);
+    
+    Vector3 saw39Position(11.0, -54.5, 0.0f);
+    Vector3 saw39Velocity(0.0f, -3.0f, 0.0f);
+    Vector3 saw39Size(0.75f, 0.75f, 0.0f);
+    Entity* saw39 = new Entity(saw39Position, saw39Velocity, saw39Size);
+    
+    Vector3 saw40Position(12.25, -54.5, 0.0f);
+    Vector3 saw40Velocity(0.0f, -3.0f, 0.0f);
+    Vector3 saw40Size(0.75f, 0.75f, 0.0f);
+    Entity* saw40 = new Entity(saw40Position, saw40Velocity, saw40Size);
     
     vector<Entity> saw;
     saw.push_back(*saw1);
@@ -1229,6 +1296,14 @@ int main(int argc, char *argv[])
     saw.push_back(*saw24);
     saw.push_back(*saw25);
     saw.push_back(*saw26);
+    saw.push_back(*saw27);
+    saw.push_back(*saw28);
+    saw.push_back(*saw29);
+    saw.push_back(*saw30);
+    saw.push_back(*saw37);
+    saw.push_back(*saw38);
+    saw.push_back(*saw39);
+    saw.push_back(*saw40);
     
     //Level 2 Platform
     Vector3 invis10Position(10.0, -28.0, 0.0);
@@ -1236,9 +1311,20 @@ int main(int argc, char *argv[])
     Platform* invis10 = new Platform(invis10Position, invis10Size);
     
     Vector3 invis11Position(10.0, -43.0, 0.0);
-    Vector3 invis11Size(0.25, 1.0, 0.0);
+    Vector3 invis11Size(0.1, 1.0, 0.0);
     Platform* invis11 = new Platform(invis11Position, invis11Size);
     
+    Vector3 invis12Position(12.5, -44.5, 0.0);
+    Vector3 invis12Size(0.25, 1.0, 0.0);
+    Platform* invis12 = new Platform(invis12Position, invis12Size);
+    
+    Vector3 invis13Position(7.0, -45.75, 0.0);
+    Vector3 invis13Size(0.25, 1.0, 0.0);
+    Platform* invis13 = new Platform(invis13Position, invis13Size);
+    
+    Vector3 invis14Position(10.0, -45.5, 0.0);
+    Vector3 invis14Size(1.0, 0.25, 0.0);
+    Platform* invis14 = new Platform(invis14Position, invis14Size);
     
     //Level 2 Item
     Vector3 item23Position(11.275, -31.875, 0.0);
@@ -1260,6 +1346,62 @@ int main(int argc, char *argv[])
     Vector3 item27Position(7.625, -35.875, 0.0);
     Vector3 item27Size(0.1, 0.1, 0.0);
     Item* item27 = new Item(item27Position, item27Size, true);
+    
+    Vector3 item28Position(9.975, -42.825, 0.0);
+    Vector3 item28Size(0.1, 0.1, 0.0);
+    Item* item28 = new Item(item28Position, item28Size, true);
+    
+    Vector3 item29Position(9.975, -43.825, 0.0);
+    Vector3 item29Size(0.1, 0.1, 0.0);
+    Item* item29 = new Item(item29Position, item29Size, true);
+    
+    Vector3 item30Position(9.975, -44.825, 0.0);
+    Vector3 item30Size(0.1, 0.1, 0.0);
+    Item* item30 = new Item(item30Position, item30Size, true);
+    
+    Vector3 item31Position(9.975, -45.825, 0.0);
+    Vector3 item31Size(0.1, 0.1, 0.0);
+    Item* item31 = new Item(item31Position, item31Size, true);
+    
+    Vector3 item32Position(12.125, -15.025, 0.0);
+    Vector3 item32Size(0.1, 0.1, 0.0);
+    Item* item32 = new Item(item32Position, item32Size, true);
+    
+    Vector3 item33Position(12.125, -16.025, 0.0);
+    Vector3 item33Size(0.1, 0.1, 0.0);
+    Item* item33 = new Item(item33Position, item33Size, true);
+    
+    Vector3 item34Position(12.475, -24.825, 0.0);
+    Vector3 item34Size(0.1, 0.1, 0.0);
+    Item* item34 = new Item(item34Position, item34Size, true);
+    
+    Vector3 item35Position(12.475, -25.825, 0.0);
+    Vector3 item35Size(0.1, 0.1, 0.0);
+    Item* item35 = new Item(item35Position, item35Size, true);
+    
+    Vector3 item36Position(12.475, -26.825, 0.0);
+    Vector3 item36Size(0.1, 0.1, 0.0);
+    Item* item36 = new Item(item36Position, item36Size, true);
+    
+    Vector3 item37Position(12.125, -39.125, 0.0);
+    Vector3 item37Size(0.1, 0.1, 0.0);
+    Item* item37 = new Item(item37Position, item37Size, true);
+    
+    Vector3 item38Position(12.125, -40.125, 0.0);
+    Vector3 item38Size(0.1, 0.1, 0.0);
+    Item* item38 = new Item(item38Position, item38Size, true);
+    
+    Vector3 item39Position(10.125, -50.125, 0.0);
+    Vector3 item39Size(0.1, 0.1, 0.0);
+    Item* item39 = new Item(item39Position, item39Size, true);
+    
+    Vector3 item40Position(10.125, -48.125, 0.0);
+    Vector3 item40Size(0.1, 0.1, 0.0);
+    Item* item40 = new Item(item40Position, item40Size, true);
+    
+    Vector3 item41Position(10.125, -52.125, 0.0);
+    Vector3 item41Size(0.1, 0.1, 0.0);
+    Item* item41 = new Item(item41Position, item41Size, true);
     
     
     
@@ -1299,9 +1441,6 @@ int main(int argc, char *argv[])
                     state = STATE_GAME_LEVEL2;
                     Mix_PlayChannel(-1, buttonPress, 0);
             }else if(event.type == SDL_KEYDOWN && state == STATE_GAME_LEVEL2) {
-                if(event.key.keysym.scancode == SDL_SCANCODE_SPACE) {
-                    moveJump = true;
-                }
                 if(event.key.keysym.scancode == SDL_SCANCODE_DOWN) {
                     moveDown = true;
                 }
@@ -1311,6 +1450,15 @@ int main(int argc, char *argv[])
                 if(event.key.keysym.scancode == SDL_SCANCODE_RIGHT) {
                     moveRight = true;
                 }
+                if(event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+                    viewMatrix.identity();
+                    state = STATE_MAIN_MENU;
+                    Mix_PlayChannel(-1, buttonPress, 0);
+                }
+            }else if(event.type == SDL_KEYDOWN && state == STATE_PAUSE2) {
+                state = STATE_GAME_LEVEL3;
+                Mix_PlayChannel(-1, buttonPress, 0);
+            }else if(event.type == SDL_KEYDOWN && state == STATE_GAME_END) {
                 if(event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
                     viewMatrix.identity();
                     state = STATE_MAIN_MENU;
@@ -1507,7 +1655,7 @@ int main(int argc, char *argv[])
                         health -= 1;
                 }
                 
-                cout << "X: " << player->position.x << " Y: " << player->position.y << endl;
+                //cout << "X: " << player->position.x << " Y: " << player->position.y << endl;
                 
                 //Enemy1 setup
                 program.setModelMatrix(modelMatrixEnemy1);
@@ -1525,8 +1673,8 @@ int main(int argc, char *argv[])
                 
                 DrawSpriteSheetSprite(&program, characterSheet, playerVerticesEnemy1, runAnimationEnemy[currentIndexEnemy], 8, 4);
                 
-                modelMatrixEnemy1.Translate(enemy1->velocity.x, 0.0, 0.0);
-                enemy1->position.x += enemy1->velocity.x;
+                modelMatrixEnemy1.Translate(enemy1->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                enemy1->position.x += enemy1->velocity.x * FIXED_TIMESTEP;
                 
                 //Invisible boundaries for enemies to turn around
                 if(!collisionEnemyWorld(*platform8, *enemy1)) {
@@ -1543,8 +1691,8 @@ int main(int argc, char *argv[])
                 
                 DrawSpriteSheetSprite(&program, characterSheet, playerVerticesEnemy2, runAnimationEnemy[currentIndexEnemy], 8, 4);
                 
-                modelMatrixEnemy2.Translate(enemy2->velocity.x, 0.0, 0.0);
-                enemy2->position.x += enemy2->velocity.x;
+                modelMatrixEnemy2.Translate(enemy2->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                enemy2->position.x += enemy2->velocity.x * FIXED_TIMESTEP;
                 
                 //Invisible boundaries for enemies to turn around
                 if(!collisionEnemyWorld(*platform8, *enemy2)) {
@@ -1611,8 +1759,8 @@ int main(int argc, char *argv[])
                 
                 DrawSpriteSheetSprite(&program, characterSheet, playerVerticesEnemy4, runAnimationEnemy[currentIndexEnemy], 8, 4);
                 
-                modelMatrixEnemy4.Translate(enemy4->velocity.x, 0.0, 0.0);
-                enemy4->position.x += enemy4->velocity.x;
+                modelMatrixEnemy4.Translate(enemy4->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                enemy4->position.x += enemy4->velocity.x * FIXED_TIMESTEP;
                 
                 //Invisible boundaries for enemies to turn around
                 if(!collisionEnemyWorld(*invis6, *enemy4)) {
@@ -1629,8 +1777,8 @@ int main(int argc, char *argv[])
                 
                 DrawSpriteSheetSprite(&program, characterSheet, playerVerticesEnemy5, runAnimationEnemy[currentIndexEnemy], 8, 4);
                 
-                modelMatrixEnemy5.Translate(enemy5->velocity.x, 0.0, 0.0);
-                enemy5->position.x += enemy5->velocity.x;
+                modelMatrixEnemy5.Translate(enemy5->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                enemy5->position.x += enemy5->velocity.x * FIXED_TIMESTEP;
                 
                 //Invisible boundaries for enemies to turn around
                 if(!collisionEntityEntity(*fire7, *enemy5)) {
@@ -1647,8 +1795,8 @@ int main(int argc, char *argv[])
                 
                 DrawSpriteSheetSprite(&program, characterSheet, playerVerticesEnemy6, runAnimationEnemy[currentIndexEnemy], 8, 4);
                 
-                modelMatrixEnemy6.Translate(enemy6->velocity.x, 0.0, 0.0);
-                enemy6->position.x += enemy6->velocity.x;
+                modelMatrixEnemy6.Translate(enemy6->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                enemy6->position.x += enemy6->velocity.x * FIXED_TIMESTEP;
                 
                 //Invisible boundaries for enemies to turn around
                 if(!collisionEnemyWorld(*invis9, *enemy6)) {
@@ -1665,8 +1813,8 @@ int main(int argc, char *argv[])
          
                 DrawSpriteSheetSprite(&program, characterSheet, playerVerticesEnemy7, runAnimationEnemy[currentIndexEnemy], 8, 4);
                 
-                modelMatrixEnemy7.Translate(enemy7->velocity.x, 0.0, 0.0);
-                enemy7->position.x += enemy7->velocity.x;
+                modelMatrixEnemy7.Translate(enemy7->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                enemy7->position.x += enemy7->velocity.x * FIXED_TIMESTEP;
                 
                 //Invisible boundaries for enemies to turn around
                 if(!collisionEntityEntity(*fire7, *enemy7)) {
@@ -1683,8 +1831,8 @@ int main(int argc, char *argv[])
                 
                 DrawSpriteSheetSprite(&program, characterSheet, playerVerticesEnemy8, runAnimationEnemy[currentIndexEnemy], 8, 4);
                 
-                modelMatrixEnemy8.Translate(enemy8->velocity.x, 0.0, 0.0);
-                enemy8->position.x += enemy8->velocity.x;
+                modelMatrixEnemy8.Translate(enemy8->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                enemy8->position.x += enemy8->velocity.x * FIXED_TIMESTEP;
                 
                 //Invisible boundaries for enemies to turn around
                 if(!collisionEntityEntity(*fire7, *enemy8)) {
@@ -2047,6 +2195,14 @@ int main(int argc, char *argv[])
                 //Go to level 2 when player jumps down
                 if(player->position.x >= 52.0 && player->position.y <= -9.5) {
                     state = STATE_PAUSE1;
+                }else if(player->position.x >= 12.5 && player->position.x <= 16.5 && player->position.y <= -9.5) {
+                    state = STATE_GAME_END;
+                }else if(player->position.x >= 35.7 && player->position.x <= 37.25 && player->position.y <= -9.5) {
+                    state = STATE_GAME_END;
+                }else if(player->position.x >= 40.25 && player->position.x <= 43.7 && player->position.y <= -9.5) {
+                    state = STATE_GAME_END;
+                }else if(player->position.x >= 48.75 && player->position.x <= 51.65 && player->position.y <= -9.5) {
+                    state = STATE_GAME_END;
                 }
         
                 //Scrolling view matrix
@@ -2059,7 +2215,8 @@ int main(int argc, char *argv[])
                 
             case STATE_PAUSE1:
             {
-                //Game Name Texture
+                //Pause
+                viewMatrix.identity();
                 program.setModelMatrix(modelMatrixPause);
                 DrawText(&program, fontTexture, "Prepare to fall!", 0.3, 0);
                 
@@ -2094,12 +2251,7 @@ int main(int argc, char *argv[])
                 
                 DrawSpriteSheetSprite(&program, characterSheet, playerVertices, runAnimation[currentIndex], 8, 4);
 
-                if(moveJump) {
-                    onFloor = false;
-                    Mix_PlayChannel(-1, jumpSound, 0);
-                    accelerationY = 6.0;
-                    player2->velocity.y += accelerationY * FIXED_TIMESTEP;
-                }else if(moveDown) {
+                if(moveDown) {
                     accelerationY = 1.0f;
                     player2->velocity.y -= accelerationY * FIXED_TIMESTEP;
                 }else if(moveLeft) {
@@ -2108,14 +2260,13 @@ int main(int argc, char *argv[])
                     player2->velocity.x += accelerationX * FIXED_TIMESTEP;
                 }
                 
-                //modelMatrixPlayer2.Translate(0.0, -gravity2 * FIXED_TIMESTEP, 0.0);
-                //player2->position.y -= gravity2 * FIXED_TIMESTEP;
+                modelMatrixPlayer2.Translate(0.0, -gravity2 * FIXED_TIMESTEP, 0.0);
+                player2->position.y -= gravity2 * FIXED_TIMESTEP;
                 
                 player2->velocity.y = lerp(player2->velocity.y, 0.0f, FIXED_TIMESTEP * friction);
                 player2->velocity.x = lerp(player2->velocity.x, 0.0f, FIXED_TIMESTEP * friction);
                 
                 modelMatrixPlayer2.Translate(player2->velocity.x, player2->velocity.y, 0.0);
-                moveJump = false;
                 moveDown = false;
                 moveLeft = false;
                 moveRight = false;
@@ -2145,7 +2296,7 @@ int main(int argc, char *argv[])
                     player2->position.x += adjustX + 0.01;
                 }
                 
-                cout << "X: " << player2->position.x << " Y: " << player2->position.y << endl;
+                //cout << "X: " << player2->position.x << " Y: " << player2->position.y << endl;
                 
                 //Check collision between player and saws
                 for(int i = 0; i < saw.size(); i++) {
@@ -2178,6 +2329,24 @@ int main(int argc, char *argv[])
                     }else
                         health -= 1;
                 }else if(!collisionEntityEntity(*saw33, *player2)) {
+                    Mix_PlayChannel(-1, hitSound, 0);
+                    if(health == 0) {
+                        //dont subtract
+                    }else
+                        health -= 1;
+                }else if(!collisionEntityEntity(*saw34, *player2)) {
+                    Mix_PlayChannel(-1, hitSound, 0);
+                    if(health == 0) {
+                        //dont subtract
+                    }else
+                        health -= 1;
+                }else if(!collisionEntityEntity(*saw35, *player2)) {
+                    Mix_PlayChannel(-1, hitSound, 0);
+                    if(health == 0) {
+                        //dont subtract
+                    }else
+                        health -= 1;
+                }else if(!collisionEntityEntity(*saw36, *player2)) {
                     Mix_PlayChannel(-1, hitSound, 0);
                     if(health == 0) {
                         //dont subtract
@@ -2276,17 +2445,14 @@ int main(int argc, char *argv[])
                 DrawSingle(&program, saw25f, smallSawTexture);
                 
                 float saw26f[] = {7.25, -38.0, 8.25, -38.0, 8.25, -37.0, 7.25, -38.0, 8.25, -37.0, 7.25, -37.0};
-                //---
                 float saw27f[] = {8.25, -39.0, 9.25, -39.0, 9.25, -38.0, 8.25, -39.0, 9.25, -38.0, 8.25, -38.0};
                 float saw28f[] = {10.25, -39.0, 11.25, -39.0, 11.25, -38.0, 10.25, -39.0, 11.25, -38.0, 10.25, -38.0};
-                float saw29f[] = {10.25, -39.0, 11.25, -39.0, 11.25, -38.0, 10.25, -39.0, 11.25, -38.0, 10.25, -38.0};
-                float saw30f[] = {10.25, -40.25, 11.25, -40.25, 11.25, -39.25, 10.25, -40.25, 11.25, -39.25, 10.25, -39.25};
+                float saw29f[] = {10.25, -40.25, 11.25, -40.25, 11.25, -39.25, 10.25, -40.25, 11.25, -39.25, 10.25, -39.25};
                 float saw31f[] = {10.25, -41.5, 11.25, -41.5, 11.25, -40.5, 10.25, -41.5, 11.25, -40.5, 10.25, -40.5};
                 DrawSingle(&program, saw26f, smallSawTexture);
                 DrawSingle(&program, saw27f, smallSawTexture);
                 DrawSingle(&program, saw28f, smallSawTexture);
                 DrawSingle(&program, saw29f, smallSawTexture);
-                DrawSingle(&program, saw30f, smallSawTexture);
                 DrawSingle(&program, saw31f, smallSawTexture);
                 
                 //Moving saw 32
@@ -2318,6 +2484,61 @@ int main(int argc, char *argv[])
                 if(saw33->position.x + saw33->size.x >= 13.25) {
                     saw33->velocity.x *= -1;
                 }
+                
+                //Moving saw 34
+                program.setModelMatrix(modelMatrixSaw34);
+                float saw34f[] = {7.25, -45.5, 8.25, -45.5, 8.25, -44.5, 7.25, -45.5, 8.25, -44.5, 7.25, -44.5};
+                DrawSingle(&program, saw34f, smallSawTexture);
+                
+                modelMatrixSaw34.Translate(saw34->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                saw34->position.x += saw34->velocity.x * FIXED_TIMESTEP;
+                
+                if(!collisionEnemyWorld(*invis12, *saw34)) {
+                    saw34->velocity.x *= -1;
+                }
+                if(saw34->position.x - saw34->size.x <= 6.25) {
+                    saw34->velocity.x *= -1;
+                }
+                
+                //Moving saw 35
+                program.setModelMatrix(modelMatrixSaw35);
+                float saw35f[] = {11.75, -46.75, 12.75, -46.75, 12.75, -45.75, 11.75, -46.75, 12.75, -45.75, 11.75, -45.75};
+                DrawSingle(&program, saw35f, smallSawTexture);
+                
+                modelMatrixSaw35.Translate(saw35->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                saw35->position.x += saw35->velocity.x * FIXED_TIMESTEP;
+                
+                if(!collisionEnemyWorld(*invis13, *saw35)) {
+                    saw35->velocity.x *= -1;
+                }
+                if(saw35->position.x + saw35->size.x >= 13.25) {
+                    saw35->velocity.x *= -1;
+                }
+                
+                //Moving saw 36
+                program.setModelMatrix(modelMatrixSaw36);
+                float saw36f[] = {9.65, -53.5, 10.65, -53.5, 10.65, -52.5, 9.65, -53.5, 10.65, -52.5, 9.65, -52.5};
+                DrawSingle(&program, saw36f, smallSawTexture);
+                
+                 modelMatrixSaw36.Translate(0.0, saw36->velocity.y * FIXED_TIMESTEP, 0.0);
+                 saw36->position.y += saw36->velocity.y * FIXED_TIMESTEP;
+                 
+                 if(!collisionEnemyWorld(*invis14, *saw36)) {
+                     saw36->velocity.y *= -1;
+                 }
+                 if(saw36->position.y - saw36->size.y <= -54.4) {
+                     saw36->velocity.y *= -1;
+                 }
+                
+                program.setModelMatrix(modelMatrixSaw);
+                float saw37f[] = {7.25, -55.0, 8.25, -55.0, 8.25, -54.0, 7.25, -55.0, 8.25, -54.0, 7.25, -54.0};
+                float saw38f[] = {8.5, -55.0, 9.5, -55.0, 9.5, -54.0, 8.5, -55.0, 9.5, -54.0, 8.5, -54.0};
+                float saw39f[] = {10.5, -55.0, 11.5, -55.0, 11.5, -54.0, 10.5, -55.0, 11.5, -54.0, 10.5, -54.0};
+                float saw40f[] = {11.75, -55.0, 12.75, -55.0, 12.75, -54.0, 11.75, -55.0, 12.75, -54.0, 11.75, -54.0};
+                DrawSingle(&program, saw37f, smallSawTexture);
+                DrawSingle(&program, saw38f, smallSawTexture);
+                DrawSingle(&program, saw39f, smallSawTexture);
+                DrawSingle(&program, saw40f, smallSawTexture);
                 
                 //Ruby setup
                 program.setModelMatrix(modelMatrixRuby);
@@ -2386,22 +2607,244 @@ int main(int argc, char *argv[])
                     score += 100;
                 }
                 
+                float rubyVertices28[] = {9.85, -43.0, 10.1, -42.75, 9.85, -42.75, 10.1, -42.75, 9.85, -43.0, 10.1, -43.0};
+                if(item28->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices28, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item28, *player2) && item28->alive) {
+                    item28->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices29[] = {9.85, -44.0, 10.1, -43.75, 9.85, -43.75, 10.1, -43.75, 9.85, -44.0, 10.1, -44.0};
+                if(item29->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices29, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item29, *player2) && item29->alive) {
+                    item29->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices30[] = {9.85, -45.0, 10.1, -44.75, 9.85, -44.75, 10.1, -44.75, 9.85, -45.0, 10.1, -45.0};
+                if(item30->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices30, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item30, *player2) && item30->alive) {
+                    item30->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices31[] = {9.85, -46.0, 10.1, -45.75, 9.85, -45.75, 10.1, -45.75, 9.85, -46.0, 10.1, -46.0};
+                if(item31->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices31, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item31, *player2) && item31->alive) {
+                    item31->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices32[] = {12.0, -15.15, 12.25, -14.9, 12.0, -14.9, 12.25, -14.9, 12.0, -15.15, 12.25, -15.15};
+                if(item32->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices32, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item32, *player2) && item32->alive) {
+                    item32->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices33[] = {12.0, -16.15, 12.25, -15.9, 12.0, -15.9, 12.25, -15.9, 12.0, -16.15, 12.25, -16.15};
+                if(item33->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices33, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item33, *player2) && item33->alive) {
+                    item33->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices34[] = {12.35, -24.9, 12.6, -24.65, 12.35, -24.65, 12.6, -24.65, 12.35, -24.9, 12.6, -24.9};
+                if(item34->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices34, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item34, *player2) && item34->alive) {
+                    item34->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices35[] = {12.35, -25.9, 12.6, -25.65, 12.35, -25.65, 12.6, -25.65, 12.35, -25.9, 12.6, -25.9};
+                if(item35->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices35, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item35, *player2) && item35->alive) {
+                    item35->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices36[] = {12.35, -26.9, 12.6, -26.65, 12.35, -26.65, 12.6, -26.65, 12.35, -26.9, 12.6, -26.9};
+                if(item36->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices36, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item36, *player2) && item36->alive) {
+                    item36->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices37[] = {12.0, -39.25, 12.25, -39.0, 12.0, -39.0, 12.25, -39.0, 12.0, -39.25, 12.25, -39.25};
+                if(item37->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices37, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item37, *player2) && item37->alive) {
+                    item37->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices38[] = {12.0, -40.25, 12.25, -40.0, 12.0, -40.0, 12.25, -40.0, 12.0, -40.25, 12.25, -40.25};
+                if(item38->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices38, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item38, *player2) && item38->alive) {
+                    item38->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices39[] = {10.0, -50.25, 10.25, -50.0, 10.0, -50.0, 10.25, -50.0, 10.0, -50.25, 10.25, -50.25};
+                if(item39->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices39, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item39, *player2) && item39->alive) {
+                    item39->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices40[] = {10.0, -48.25, 10.25, -48.0, 10.0, -48.0, 10.25, -48.0, 10.0, -48.25, 10.25, -48.25};
+                if(item40->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices40, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item40, *player2) && item40->alive) {
+                    item40->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices41[] = {10.0, -52.25, 10.25, -52.0, 10.0, -52.0, 10.25, -52.0, 10.0, -52.25, 10.25, -52.25};
+                if(item41->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices41, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item41, *player2) && item41->alive) {
+                    item41->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                //Score & Health matrix
+                program.setModelMatrix(modelMatrixScoreHealth2);
+                
+                if(score_temp->position.y <= -69.7) {
+                    //do noting
+                }
+                else {
+                    modelMatrixScoreHealth2.Translate(0.0, -gravity2 * FIXED_TIMESTEP, 0.0);
+                    score_temp->position.y -= gravity2 * FIXED_TIMESTEP;
+               }
+                
+                modelMatrixScoreHealth2.Translate(player2->velocity.x, player2->velocity.y, 0.0);
+                
+                score_temp->position.x += player2->velocity.x;
+                score_temp->position.y += player2->velocity.y;
+                
+                DrawText(&program, fontTexture, "Score: "+to_string(score), 0.2, 0.0);
+                
+                float HP1[] = {2.25, -0.15, 2.75, -0.15, 2.75, 0.25, 2.25, -0.15, 2.75, 0.25, 2.25, 0.25};
+                float HP2[] = {2.75, -0.15, 3.25, -0.15, 3.25, 0.25, 2.75, -0.15, 3.25, 0.25, 2.75, 0.25};
+                float HP3[] = {3.25, -0.15, 3.75, -0.15, 3.75, 0.25, 3.25, -0.15, 3.75, 0.25, 3.25, 0.25};
+                
+                if(health == 3) {
+                    DrawSingle(&program, HP1, fullHeartTexture);
+                    DrawSingle(&program, HP2, fullHeartTexture);
+                    DrawSingle(&program, HP3, fullHeartTexture);
+                }else if(health == 2) {
+                    DrawSingle(&program, HP1, fullHeartTexture);
+                    DrawSingle(&program, HP2, fullHeartTexture);
+                    DrawSingle(&program, HP3, emptyHeartTexture);
+                }else if(health == 1) {
+                    DrawSingle(&program, HP1, fullHeartTexture);
+                    DrawSingle(&program, HP2, emptyHeartTexture);
+                    DrawSingle(&program, HP3, emptyHeartTexture);
+                }else {
+                    DrawSingle(&program, HP1, emptyHeartTexture);
+                    DrawSingle(&program, HP2, emptyHeartTexture);
+                    DrawSingle(&program, HP3, emptyHeartTexture);
+                }
+                
                 //Scroll view
                 viewMatrix.identity();
                 viewMatrix.Translate(-player2->position.x, -player2->position.y+2, 0);
                 program.setViewMatrix(viewMatrix);
                 
+                //Change states to level 3
+                if(player2->position.y <= -65.0 && player2->position.x >= 13.0) {
+                    state = STATE_PAUSE2;
+                }
+  
             break;
             }
-            /*
-            case STATE_GAME_END:
-             
-                modelScore.Translate(-1.2, 0.0, 0.0);
-                //program.setModelMatrix(modelScore);
-                DrawText(&program, fontTexture, "Game Over!", 0.3, 0.0);
+                
+            case STATE_PAUSE2: {
+                viewMatrix.identity();
+                //Pause
+                program.setModelMatrix(modelMatrixPause2);
+                DrawText(&program, fontTexture, "Get ready to climb!", 0.3, 0);
+                
+                //Press Button Texture
+                program.setModelMatrix(modelMatrixPressButton);
+                DrawText(&program, fontTexture, "Press any key to continue...", 0.2, 0);
                 
             break;
-             */
+            }
+                
+            case STATE_GAME_LEVEL3: {
+                
+            break;
+            }
+                
+            
+            case STATE_GAME_END: {
+                
+                viewMatrix.identity();
+                program.setModelMatrix(modelMatrixGameOver);
+                DrawText(&program, fontTexture, "Game Over!", 0.3, 0.0);
+                
+                program.setModelMatrix(modelMatrixEndScore);
+                DrawText(&program, fontTexture, "Score: "+to_string(score), 0.2, 0.0);
+                
+            break;
+            }
+             
         }
         
         
@@ -2507,15 +2950,43 @@ int main(int argc, char *argv[])
     delete saw24;
     delete saw25;
     delete saw26;
+    delete saw27;
+    delete saw28;
+    delete saw29;
+    delete saw30;
     delete saw32;
     delete saw33;
+    delete saw34;
+    delete saw35;
+    delete saw36;
+    delete saw37;
+    delete saw38;
+    delete saw39;
+    delete saw40;
     delete invis10;
     delete invis11;
+    delete invis12;
+    delete invis13;
+    delete invis14;
     delete item23;
     delete item24;
     delete item25;
     delete item26;
     delete item27;
+    delete item28;
+    delete item29;
+    delete item30;
+    delete item31;
+    delete item32;
+    delete item33;
+    delete item34;
+    delete item35;
+    delete item36;
+    delete item37;
+    delete item38;
+    delete item39;
+    delete item40;
+    delete item41;
     
     SDL_Quit();
     return 0;
