@@ -24,8 +24,6 @@ using namespace std;
 #define FIXED_TIMESTEP 0.0166666f
 #define MAX_TIMESTEPS 6
 
-//Define LEVEL_HEIGHT and WIDTH
-
 float TILE_SIZE = 0.5f;
 int mapWidth;
 int mapHeight;
@@ -57,6 +55,7 @@ int currentIndexFire = 0;
 int health = 3;
 float friction = 2.0f;
 float gravity = 2.0f;
+float gravity2 = 3.0f;
 float penetration = 0.0f;
 float y_distance, x_distance;
 float adjustY, adjustX;
@@ -65,10 +64,7 @@ bool onFloor = false, moveJump = false, moveDown = false, moveLeft = false, move
 int score = 0;
 bool temp = true;
 
-//unsigned char** levelData;
-
-
-enum GameState { STATE_MAIN_MENU, STATE_GAME_LEVEL1, STATE_GAME_LEVEL2, STATE_GAME_LEVEL3, STATE_GAME_END };
+enum GameState { STATE_MAIN_MENU, STATE_GAME_LEVEL1, STATE_PAUSE1, STATE_GAME_LEVEL2, STATE_GAME_LEVEL3, STATE_GAME_END };
 int state = STATE_MAIN_MENU;
 
 float lastFrameTicks = 0.0f;
@@ -104,18 +100,153 @@ unsigned char levelData[25][130] =
     {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,15,12,12,12,12,12,12,12,9,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,11,12,12,9,10,10,10,10,10,11,12,12,12,12,14,12,9,10,10,10,10,10,10,10,10,10,11,12,12,12,12,12,9,10,11,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10}
 };
 
-unsigned char levelData2[10][10] =
+unsigned char levelData2[150][40] =
 {
-    {36,37,22,71,71,72,17,36,37,36},
-    {36,37,38,71,87,88,33,36,37,52},
-    {36,37,54,71,87,88,49,36,36,52},
-    {36,37,70,71,87,88,65,36,52,52},
-    {37,37,22,71,87,88,17,36,52,53},
-    {37,53,38,71,87,88,33,36,52,53},
-    {37,53,54,71,87,88,17,36,52,53},
-    {36,37,70,71,87,88,33,36,52,53},
-    {36,37,22,71,87,88,49,36,52,53},
-    {52,53,38,87,87,88,65,52,52,53}
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,9,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,17,18,18,18,18,18,18,18,18,18,18,18,18,18},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,11,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10},
+    {10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10}
 };
 
 //-----------------------------------------------------------------------------------------
@@ -208,6 +339,50 @@ void DrawWorld(ShaderProgram *program, int spriteSheet, int LEVEL_HEIGHT, int LE
     
 }
 
+void DrawWorld2(ShaderProgram *program, int spriteSheet, int LEVEL_HEIGHT, int LEVEL_WIDTH, int SPRITE_COUNT_X, int SPRITE_COUNT_Y) {
+    std::vector<float> vertexData;
+    std::vector<float> texCoordData;
+    for(int y=0; y < LEVEL_HEIGHT; y++) {
+        for(int x=0; x < LEVEL_WIDTH; x++) {
+            if(levelData2[y][x] != 19) {
+                float u = (float)(((int)levelData2[y][x]) % SPRITE_COUNT_X) / (float) SPRITE_COUNT_X;
+                float v = (float)(((int)levelData2[y][x]) / SPRITE_COUNT_X) / (float) SPRITE_COUNT_Y;
+                float spriteWidth = 1.0f/(float)SPRITE_COUNT_X;
+                float spriteHeight = 1.0f/(float)SPRITE_COUNT_Y;
+                vertexData.insert(vertexData.end(), {
+                    TILE_SIZE * x, -TILE_SIZE * y,
+                    TILE_SIZE * x, (-TILE_SIZE * y)-TILE_SIZE,
+                    (TILE_SIZE * x)+TILE_SIZE, (-TILE_SIZE * y)-TILE_SIZE,
+                    TILE_SIZE * x, -TILE_SIZE * y,
+                    (TILE_SIZE * x)+TILE_SIZE, (-TILE_SIZE * y)-TILE_SIZE,
+                    (TILE_SIZE * x)+TILE_SIZE, -TILE_SIZE * y
+                });
+                
+                texCoordData.insert(texCoordData.end(), {
+                    u, v,
+                    u, v+(spriteHeight),
+                    u+spriteWidth, v+(spriteHeight),
+                    u, v,
+                    u+spriteWidth, v+(spriteHeight),
+                    u+spriteWidth, v
+                });
+            }
+        }
+    }
+    
+    glUseProgram(program->programID);
+    glVertexAttribPointer(program->positionAttribute, 2, GL_FLOAT, false, 0, vertexData.data());
+    glEnableVertexAttribArray(program->positionAttribute);
+    glVertexAttribPointer(program->texCoordAttribute, 2, GL_FLOAT, false, 0, texCoordData.data());
+    glEnableVertexAttribArray(program->texCoordAttribute);
+    glBindTexture(GL_TEXTURE_2D, spriteSheet);
+    glDrawArrays(GL_TRIANGLES, 0, vertexData.size()/2);
+    glDisableVertexAttribArray(program->positionAttribute);
+    glDisableVertexAttribArray(program->texCoordAttribute);
+    
+}
+
+
 //-----------------------------------------------------------------------------------------
 
 void DrawText(ShaderProgram *program, int fontTexture, std::string text, float size, float spacing) {
@@ -244,7 +419,7 @@ void DrawText(ShaderProgram *program, int fontTexture, std::string text, float s
     glDisableVertexAttribArray(program->texCoordAttribute);
 }
 
-void DrawHealth(ShaderProgram *program, float vertices[], GLuint texture) {
+void DrawSingle(ShaderProgram *program, float vertices[], GLuint texture) {
     
     float texCoords[] = {0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 1.0, 1.0, 0.0, 0.0};
     
@@ -343,12 +518,11 @@ bool collisionYBot(Platform world, Entity player){
     if(playerLeft >= worldRight) return true;
     if(playerRight <= worldLeft) return true;
     
-    //if(playerBot <= worldTop && playerRight <= worldRight && playerLeft >= worldLeft && playerTop > worldTop) {
     if(playerBot <= worldTop && playerTop > worldTop) {
         y_distance = player.position.y - world.position.y;
         penetration = fabs(y_distance - player.size.y/2 - world.size.y/2);
         adjustY = penetration;
-        onFloor = true;
+        //onFloor = true;
         return false;
     }
     return true;
@@ -377,6 +551,30 @@ bool collisionXRight(Platform world, Entity player){
     }
     return true;
 }
+
+bool collisionXLeft(Platform world, Entity player){
+    float playerBot = player.position.y - player.size.y/2;
+    float playerRight = player.position.x + player.size.x/2;
+    float playerLeft = player.position.x - player.size.x/2;
+    float playerTop = player.position.y + player.size.y/2;
+    float worldTop = world.position.y + world.size.y/2;
+    float worldRight = world.position.x + world.size.x/2;
+    float worldLeft = world.position.x - world.size.x/2;
+    float worldBot = world.position.y - world.size.y/2;
+    
+    if(playerBot >= worldTop)   return true;
+    if(playerTop <= worldBot)   return true;
+    if(playerLeft >= worldRight) return true;
+    if(playerRight <= worldLeft) return true;
+    
+    if(playerLeft <= worldRight && playerBot < worldTop) {
+        x_distance = world.position.x- player.position.x;
+        penetration = fabs(x_distance + player.size.x/2 + world.size.x/2);
+        adjustX = penetration;
+        return false;
+    }
+    return true;
+}
 //-----------------------------------------------------------------------------------------
 
 SDL_Window* displayWindow;
@@ -398,7 +596,9 @@ int main(int argc, char *argv[])
     Matrix modelMatrixBackGround2;
     Matrix modelMatrixGameName;
     Matrix modelMatrixPressButton;
+    Matrix modelMatrixPause;
     Matrix modelMatrixPlayer;
+    Matrix modelMatrixPlayer2;
     Matrix modelMatrixEnemy1;
     Matrix modelMatrixEnemy2;
     Matrix modelMatrixEnemy3;
@@ -407,13 +607,19 @@ int main(int argc, char *argv[])
     Matrix modelMatrixEnemy6;
     Matrix modelMatrixEnemy7;
     Matrix modelMatrixEnemy8;
+    Matrix modelMatrixSaw17;
+    Matrix modelMatrixSaw18;
+    Matrix modelMatrixSaw32;
+    Matrix modelMatrixSaw33;
+    Matrix modelMatrixSaw;
     Matrix modelMatrixRuby;
     Matrix modelMatrixScoreHealth;
     Matrix viewMatrix;
     
     //Reposition the position of state menu text
     modelMatrixGameName.Translate(-0.5, 0.5, 0.0);
-    modelMatrixPressButton.Translate(-2.0, -1.0, 0.0);
+    modelMatrixPause.Translate(-2.0, 0.5, 0.0);
+    modelMatrixPressButton.Translate(-2.2, -1.0, 0.0);
     
     //Reposition score;
     modelMatrixScoreHealth.Translate(0.5, -9.5, 0.0);
@@ -433,9 +639,13 @@ int main(int argc, char *argv[])
     GLuint fontTexture = LoadTexture("pixel_font.png");
     GLuint rubyTexture = LoadTexture("ruby2.png");
     GLuint fireTexture = LoadTexture("CampFireFinished.png");
-    GLuint spikeTexture = LoadTexture("SawSmall.png");
+    GLuint smallSawTexture = LoadTexture("SawSmall.png");
     GLuint fullHeartTexture = LoadTexture("heart_full.png");
     GLuint emptyHeartTexture = LoadTexture("heart_empty.png");
+    
+    Mix_Chunk *buttonPress;
+    buttonPress = Mix_LoadWAV("buttonpress.wav");
+    //Mix_VolumeChunk(buttonPress, 50);
     
     Mix_Chunk *jumpSound;
     jumpSound = Mix_LoadWAV("jump.wav");
@@ -455,13 +665,18 @@ int main(int argc, char *argv[])
     
     Mix_Music *Level1_music;
     Level1_music = Mix_LoadMUS("Road_to_Dazir.wav");
+    
+    Mix_Music *Level2_music;
+    Level2_music = Mix_LoadMUS("music_jewels.wav");
 
     
     if(state == STATE_MAIN_MENU || state == STATE_GAME_LEVEL1) {
         Mix_PlayMusic(Level1_music, -1);
     }
-    else {
+    else if(state == STATE_GAME_LEVEL2){
         //dont play
+        Mix_CloseAudio();
+        Mix_PlayMusic(Level2_music, -1);
     }
     
     //The first tile of spritesheet starts with 0.
@@ -471,8 +686,8 @@ int main(int argc, char *argv[])
         }
     }
     
-    for(int i = 0; i < 10; i++) {
-        for(int j = 0; j < 10; j++){
+    for(int i = 0; i < 150; i++) {
+        for(int j = 0; j < 40; j++){
             levelData2[i][j] -= 1;
         }
     }
@@ -491,6 +706,12 @@ int main(int argc, char *argv[])
     Vector3 playerVelocity(0.0f, 0.0f, 0.0f);
     Vector3 playerSize(0.5f, 0.5f, 0.0f);
     Entity* player = new Entity(playerPosition, playerVelocity, playerSize);
+    
+    //Player Level2
+    Vector3 player2Position(10.0f, -5.f, 0.0f);
+    Vector3 player2Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 player2Size(0.5f, 0.5f, 0.0f);
+    Entity* player2 = new Entity(player2Position, player2Velocity, player2Size);
     
     //----------------------------
     
@@ -824,6 +1045,224 @@ int main(int argc, char *argv[])
     Vector3 item22Size(0.1, 0.1, 0.0);
     Item* item22 = new Item(item22Position, item22Size, true);
     
+    //Level 2----------------------------------------------------
+    
+    //Right wall
+    Vector3 platform21Position(3.425, -32.75, 0.0);
+    Vector3 platform21Size(6.9, 65.5, 0.0);
+    Platform* platform21 = new Platform(platform21Position, platform21Size);
+    
+    //Left wall
+    Vector3 platform22Position(16.525, -30.125, 0.0);
+    Vector3 platform22Size(6.85, 60.25, 0.0);
+    Platform* platform22 = new Platform(platform22Position, platform22Size);
+    
+    //Bottom floor
+    Vector3 platform23Position(13.25, -67.75, 0.0);
+    Vector3 platform23Size(13.5, 4.5, 0.0);
+    Platform* platform23 = new Platform(platform23Position, platform23Size);
+    
+    //Saw
+    Vector3 saw1Position(7.75, -12.0, 0.0f);
+    Vector3 saw1Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw1Size(0.75f, 0.75f, 0.0f);
+    Entity* saw1 = new Entity(saw1Position, saw1Velocity, saw1Size);
+    
+    Vector3 saw2Position(8.75, -13.0, 0.0f);
+    Vector3 saw2Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw2Size(0.75f, 0.75f, 0.0f);
+    Entity* saw2 = new Entity(saw2Position, saw2Velocity, saw2Size);
+    
+    Vector3 saw3Position(9.75, -14.0, 0.0f);
+    Vector3 saw3Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw3Size(0.75f, 0.75f, 0.0f);
+    Entity* saw3 = new Entity(saw3Position, saw3Velocity, saw3Size);
+    
+    Vector3 saw4Position(10.75, -15.0, 0.0f);
+    Vector3 saw4Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw4Size(0.75f, 0.75f, 0.0f);
+    Entity* saw4 = new Entity(saw4Position, saw4Velocity, saw4Size);
+    
+    Vector3 saw5Position(7.75, -19.0, 0.0f);
+    Vector3 saw5Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw5Size(0.75f, 0.75f, 0.0f);
+    Entity* saw5 = new Entity(saw5Position, saw5Velocity, saw5Size);
+    
+    Vector3 saw6Position(9.0, -19.0, 0.0f);
+    Vector3 saw6Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw6Size(0.75f, 0.75f, 0.0f);
+    Entity* saw6 = new Entity(saw6Position, saw6Velocity, saw6Size);
+    
+    Vector3 saw7Position(11.0, -19.0, 0.0f);
+    Vector3 saw7Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw7Size(0.75f, 0.75f, 0.0f);
+    Entity* saw7 = new Entity(saw7Position, saw7Velocity, saw7Size);
+    
+    Vector3 saw8Position(12.25, -19.0, 0.0f);
+    Vector3 saw8Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw8Size(0.75f, 0.75f, 0.0f);
+    Entity* saw8 = new Entity(saw8Position, saw8Velocity, saw8Size);
+    
+    Vector3 saw9Position(7.75, -22.0, 0.0f);
+    Vector3 saw9Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw9Size(0.75f, 0.75f, 0.0f);
+    Entity* saw9 = new Entity(saw9Position, saw9Velocity, saw9Size);
+    
+    Vector3 saw10Position(9.0, -22.0, 0.0f);
+    Vector3 saw10Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw10Size(0.75f, 0.75f, 0.0f);
+    Entity* saw10 = new Entity(saw10Position, saw10Velocity, saw10Size);
+    
+    Vector3 saw11Position(10.25, -22.0, 0.0f);
+    Vector3 saw11Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw11Size(0.75f, 0.75f, 0.0f);
+    Entity* saw11 = new Entity(saw11Position, saw11Velocity, saw11Size);
+    
+    Vector3 saw12Position(12.25, -22.0, 0.0f);
+    Vector3 saw12Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw12Size(0.75f, 0.75f, 0.0f);
+    Entity* saw12 = new Entity(saw12Position, saw12Velocity, saw12Size);
+    
+    Vector3 saw13Position(7.25, -25.0, 0.0f);
+    Vector3 saw13Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw13Size(0.75f, 0.75f, 0.0f);
+    Entity* saw13 = new Entity(saw13Position, saw13Velocity, saw13Size);
+    
+    Vector3 saw14Position(9.0, -25.0, 0.0f);
+    Vector3 saw14Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw14Size(0.75f, 0.75f, 0.0f);
+    Entity* saw14 = new Entity(saw14Position, saw14Velocity, saw14Size);
+    
+    Vector3 saw15Position(10.25, -25.0, 0.0f);
+    Vector3 saw15Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw15Size(0.75f, 0.75f, 0.0f);
+    Entity* saw15 = new Entity(saw15Position, saw15Velocity, saw15Size);
+    
+    Vector3 saw16Position(11.5, -25.0, 0.0f);
+    Vector3 saw16Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw16Size(0.75f, 0.75f, 0.0f);
+    Entity* saw16 = new Entity(saw16Position, saw16Velocity, saw16Size);
+    
+    Vector3 saw17Position(7.75, -28.0, 0.0f);
+    Vector3 saw17Velocity(1.0f, 0.0f, 0.0f);
+    Vector3 saw17Size(0.75f, 0.75f, 0.0f);
+    Entity* saw17 = new Entity(saw17Position, saw17Velocity, saw17Size);
+    
+    Vector3 saw18Position(12.25, -28.0, 0.0f);
+    Vector3 saw18Velocity(-1.0f, 0.0f, 0.0f);
+    Vector3 saw18Size(0.75f, 0.75f, 0.0f);
+    Entity* saw18 = new Entity(saw18Position, saw18Velocity, saw18Size);
+    
+    Vector3 saw19Position(12.25, -32.0, 0.0f);
+    Vector3 saw19Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw19Size(0.75f, 0.75f, 0.0f);
+    Entity* saw19 = new Entity(saw19Position, saw19Velocity, saw19Size);
+    
+    Vector3 saw20Position(11.25, -33.0, 0.0f);
+    Vector3 saw20Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw20Size(0.75f, 0.75f, 0.0f);
+    Entity* saw20 = new Entity(saw20Position, saw20Velocity, saw20Size);
+    
+    Vector3 saw21Position(10.25, -32.0, 0.0f);
+    Vector3 saw21Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw21Size(0.75f, 0.75f, 0.0f);
+    Entity* saw21 = new Entity(saw21Position, saw21Velocity, saw21Size);
+    
+    Vector3 saw22Position(9.0, -32.0, 0.0f);
+    Vector3 saw22Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw22Size(0.75f, 0.75f, 0.0f);
+    Entity* saw22 = new Entity(saw22Position, saw22Velocity, saw22Size);
+    
+    Vector3 saw23Position(8.5, -33.0, 0.0f);
+    Vector3 saw23Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw23Size(0.75f, 0.75f, 0.0f);
+    Entity* saw23 = new Entity(saw23Position, saw23Velocity, saw23Size);
+    
+    Vector3 saw24Position(8.85, -34.25, 0.0f);
+    Vector3 saw24Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw24Size(0.75f, 0.75f, 0.0f);
+    Entity* saw24 = new Entity(saw24Position, saw24Velocity, saw24Size);
+    
+    Vector3 saw25Position(8.5, -35.5, 0.0f);
+    Vector3 saw25Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw25Size(0.75f, 0.75f, 0.0f);
+    Entity* saw25 = new Entity(saw25Position, saw25Velocity, saw25Size);
+    
+    Vector3 saw26Position(7.75, -37.5, 0.0f);
+    Vector3 saw26Velocity(0.0f, 0.0f, 0.0f);
+    Vector3 saw26Size(0.75f, 0.75f, 0.0f);
+    Entity* saw26 = new Entity(saw26Position, saw26Velocity, saw26Size);
+    
+    Vector3 saw32Position(7.75, -43.0, 0.0f);
+    Vector3 saw32Velocity(2.0f, 0.0f, 0.0f);
+    Vector3 saw32Size(0.75f, 0.75f, 0.0f);
+    Entity* saw32 = new Entity(saw32Position, saw32Velocity, saw32Size);
+    
+    Vector3 saw33Position(12.25, -43.0, 0.0f);
+    Vector3 saw33Velocity(-2.0f, 0.0f, 0.0f);
+    Vector3 saw33Size(0.75f, 0.75f, 0.0f);
+    Entity* saw33 = new Entity(saw33Position, saw33Velocity, saw33Size);
+    
+    
+    vector<Entity> saw;
+    saw.push_back(*saw1);
+    saw.push_back(*saw2);
+    saw.push_back(*saw3);
+    saw.push_back(*saw4);
+    saw.push_back(*saw5);
+    saw.push_back(*saw6);
+    saw.push_back(*saw7);
+    saw.push_back(*saw8);
+    saw.push_back(*saw9);
+    saw.push_back(*saw10);
+    saw.push_back(*saw11);
+    saw.push_back(*saw12);
+    saw.push_back(*saw13);
+    saw.push_back(*saw14);
+    saw.push_back(*saw15);
+    saw.push_back(*saw16);
+    saw.push_back(*saw19);
+    saw.push_back(*saw20);
+    saw.push_back(*saw21);
+    saw.push_back(*saw22);
+    saw.push_back(*saw23);
+    saw.push_back(*saw24);
+    saw.push_back(*saw25);
+    saw.push_back(*saw26);
+    
+    //Level 2 Platform
+    Vector3 invis10Position(10.0, -28.0, 0.0);
+    Vector3 invis10Size(0.25, 1.0, 0.0);
+    Platform* invis10 = new Platform(invis10Position, invis10Size);
+    
+    Vector3 invis11Position(10.0, -43.0, 0.0);
+    Vector3 invis11Size(0.25, 1.0, 0.0);
+    Platform* invis11 = new Platform(invis11Position, invis11Size);
+    
+    
+    //Level 2 Item
+    Vector3 item23Position(11.275, -31.875, 0.0);
+    Vector3 item23Size(0.1, 0.1, 0.0);
+    Item* item23 = new Item(item23Position, item23Size, true);
+    
+    Vector3 item24Position(7.625, -32.875, 0.0);
+    Vector3 item24Size(0.1, 0.1, 0.0);
+    Item* item24 = new Item(item24Position, item24Size, true);
+    
+    Vector3 item25Position(7.625, -33.875, 0.0);
+    Vector3 item25Size(0.1, 0.1, 0.0);
+    Item* item25 = new Item(item25Position, item25Size, true);
+    
+    Vector3 item26Position(7.625, -34.875, 0.0);
+    Vector3 item26Size(0.1, 0.1, 0.0);
+    Item* item26 = new Item(item26Position, item26Size, true);
+    
+    Vector3 item27Position(7.625, -35.875, 0.0);
+    Vector3 item27Size(0.1, 0.1, 0.0);
+    Item* item27 = new Item(item27Position, item27Size, true);
+    
+    
+    
     SDL_Event event;
     bool done = false;
     while (!done) {
@@ -832,14 +1271,15 @@ int main(int argc, char *argv[])
                 done = true;
             }else if(event.type == SDL_KEYDOWN && state == STATE_MAIN_MENU) {
                 if(event.key.keysym.scancode == SDL_SCANCODE_2) {
-                    state = STATE_GAME_LEVEL2;
+                    state = STATE_PAUSE1;
+                    Mix_PlayChannel(-1, buttonPress, 0);
                 }
                 else
                     state = STATE_GAME_LEVEL1;
+                    Mix_PlayChannel(-1, buttonPress, 0);
             }else if(event.type == SDL_KEYDOWN && state == STATE_GAME_LEVEL1) {
                 if(event.key.keysym.scancode == SDL_SCANCODE_SPACE) {
                     moveJump = true;
-                    Mix_PlayChannel(-1, jumpSound, 0);
                 }
                 if(event.key.keysym.scancode == SDL_SCANCODE_DOWN) {
                     moveDown = true;
@@ -853,6 +1293,28 @@ int main(int argc, char *argv[])
                 if(event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
                     viewMatrix.identity();
                     state = STATE_MAIN_MENU;
+                    Mix_PlayChannel(-1, buttonPress, 0);
+                }
+            }else if(event.type == SDL_KEYDOWN && state == STATE_PAUSE1) {
+                    state = STATE_GAME_LEVEL2;
+                    Mix_PlayChannel(-1, buttonPress, 0);
+            }else if(event.type == SDL_KEYDOWN && state == STATE_GAME_LEVEL2) {
+                if(event.key.keysym.scancode == SDL_SCANCODE_SPACE) {
+                    moveJump = true;
+                }
+                if(event.key.keysym.scancode == SDL_SCANCODE_DOWN) {
+                    moveDown = true;
+                }
+                if(event.key.keysym.scancode == SDL_SCANCODE_LEFT) {
+                    moveLeft = true;
+                }
+                if(event.key.keysym.scancode == SDL_SCANCODE_RIGHT) {
+                    moveRight = true;
+                }
+                if(event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+                    viewMatrix.identity();
+                    state = STATE_MAIN_MENU;
+                    Mix_PlayChannel(-1, buttonPress, 0);
                 }
             }
         }
@@ -914,10 +1376,10 @@ int main(int argc, char *argv[])
                 }
                 
                 DrawSpriteSheetSprite(&program, characterSheet, playerVertices, runAnimation[currentIndex], 8, 4);
-                
-                //&& onFloor
-                if(moveJump) {
+
+                if(moveJump && onFloor) {
                     onFloor = false;
+                    Mix_PlayChannel(-1, jumpSound, 0);
                     accelerationY = 6.0;
                     player->velocity.y += accelerationY * FIXED_TIMESTEP;
                 }else if(moveDown) {
@@ -949,6 +1411,7 @@ int main(int argc, char *argv[])
                         modelMatrixPlayer.Translate(0.0, adjustY + 0.01, 0.0);
                         player->velocity.y = 0.0f;
                         player->position.y += adjustY + 0.01;
+                        onFloor = true;
                     }
                 }
                 
@@ -1045,11 +1508,6 @@ int main(int argc, char *argv[])
                 }
                 
                 cout << "X: " << player->position.x << " Y: " << player->position.y << endl;
-                
-                //Go to level 2 when player jumps down
-                if(player->position.x >= 52.0 && player->position.y <= -9.5) {
-                    state = STATE_GAME_LEVEL2;
-                }
                 
                 //Enemy1 setup
                 program.setModelMatrix(modelMatrixEnemy1);
@@ -1169,7 +1627,6 @@ int main(int argc, char *argv[])
                 
                 float playerVerticesEnemy5[] = {43.5, -5.5, 44.0, -5.0, 43.5, -5.0, 44.0, -5.0, 43.5, -5.5, 44.0, -5.5};
                 
-                
                 DrawSpriteSheetSprite(&program, characterSheet, playerVerticesEnemy5, runAnimationEnemy[currentIndexEnemy], 8, 4);
                 
                 modelMatrixEnemy5.Translate(enemy5->velocity.x, 0.0, 0.0);
@@ -1188,7 +1645,6 @@ int main(int argc, char *argv[])
                 
                 float playerVerticesEnemy6[] = {47.5, -5.5, 47.0, -5.0, 47.5, -5.0, 47.0, -5.0, 47.5, -5.5, 47.0, -5.5};
                 
-                
                 DrawSpriteSheetSprite(&program, characterSheet, playerVerticesEnemy6, runAnimationEnemy[currentIndexEnemy], 8, 4);
                 
                 modelMatrixEnemy6.Translate(enemy6->velocity.x, 0.0, 0.0);
@@ -1206,8 +1662,7 @@ int main(int argc, char *argv[])
                 program.setModelMatrix(modelMatrixEnemy7);
                 
                 float playerVerticesEnemy7[] = {44.5, -5.5, 44.0, -5.0, 44.5, -5.0, 44.0, -5.0, 44.5, -5.5, 44.0, -5.5};
-                
-                
+         
                 DrawSpriteSheetSprite(&program, characterSheet, playerVerticesEnemy7, runAnimationEnemy[currentIndexEnemy], 8, 4);
                 
                 modelMatrixEnemy7.Translate(enemy7->velocity.x, 0.0, 0.0);
@@ -1225,7 +1680,6 @@ int main(int argc, char *argv[])
                 program.setModelMatrix(modelMatrixEnemy8);
                 
                 float playerVerticesEnemy8[] = {48.5, -5.5, 48.0, -5.0, 48.5, -5.0, 48.0, -5.0, 48.5, -5.5, 48.0, -5.5};
-                
                 
                 DrawSpriteSheetSprite(&program, characterSheet, playerVerticesEnemy8, runAnimationEnemy[currentIndexEnemy], 8, 4);
                 
@@ -1573,21 +2027,26 @@ int main(int argc, char *argv[])
                 float HP3[] = {3.25, -0.15, 3.75, -0.15, 3.75, 0.25, 3.25, -0.15, 3.75, 0.25, 3.25, 0.25};
                 
                 if(health == 3) {
-                    DrawHealth(&program, HP1, fullHeartTexture);
-                    DrawHealth(&program, HP2, fullHeartTexture);
-                    DrawHealth(&program, HP3, fullHeartTexture);
+                    DrawSingle(&program, HP1, fullHeartTexture);
+                    DrawSingle(&program, HP2, fullHeartTexture);
+                    DrawSingle(&program, HP3, fullHeartTexture);
                 }else if(health == 2) {
-                    DrawHealth(&program, HP1, fullHeartTexture);
-                    DrawHealth(&program, HP2, fullHeartTexture);
-                    DrawHealth(&program, HP3, emptyHeartTexture);
+                    DrawSingle(&program, HP1, fullHeartTexture);
+                    DrawSingle(&program, HP2, fullHeartTexture);
+                    DrawSingle(&program, HP3, emptyHeartTexture);
                 }else if(health == 1) {
-                    DrawHealth(&program, HP1, fullHeartTexture);
-                    DrawHealth(&program, HP2, emptyHeartTexture);
-                    DrawHealth(&program, HP3, emptyHeartTexture);
+                    DrawSingle(&program, HP1, fullHeartTexture);
+                    DrawSingle(&program, HP2, emptyHeartTexture);
+                    DrawSingle(&program, HP3, emptyHeartTexture);
                 }else {
-                    DrawHealth(&program, HP1, emptyHeartTexture);
-                    DrawHealth(&program, HP2, emptyHeartTexture);
-                    DrawHealth(&program, HP3, emptyHeartTexture);
+                    DrawSingle(&program, HP1, emptyHeartTexture);
+                    DrawSingle(&program, HP2, emptyHeartTexture);
+                    DrawSingle(&program, HP3, emptyHeartTexture);
+                }
+                
+                //Go to level 2 when player jumps down
+                if(player->position.x >= 52.0 && player->position.y <= -9.5) {
+                    state = STATE_PAUSE1;
                 }
         
                 //Scrolling view matrix
@@ -1596,19 +2055,347 @@ int main(int argc, char *argv[])
                 program.setViewMatrix(viewMatrix);
                 
             break;
-        }
+            }
+                
+            case STATE_PAUSE1:
+            {
+                //Game Name Texture
+                program.setModelMatrix(modelMatrixPause);
+                DrawText(&program, fontTexture, "Prepare to fall!", 0.3, 0);
+                
+                //Press Button Texture
+                program.setModelMatrix(modelMatrixPressButton);
+                DrawText(&program, fontTexture, "Press any key to continue...", 0.2, 0);
+                
+                break;
+            }
+                
             case STATE_GAME_LEVEL2:
             {
                 viewMatrix.identity();
+
+                //BackGround Setup
                 program.setModelMatrix(modelMatrixBackGround2);
-                DrawWorld(&program, spriteSheet, 10, 10, levelData2[10][10], 15 ,6);
-                //DrawWorld(&program, spriteSheet, 25, 130, levelData[25][130], 8 ,3);
+                DrawWorld2(&program, spriteSheet, 150, 40, 8, 3);
+                
+                //Player setup
+                program.setModelMatrix(modelMatrixPlayer2);
+                float playerVertices[] = {9.75, -5.25, 10.25, -4.75, 9.75, -4.75, 10.25, -4.75, 9.75, -5.25, 10.25, -5.25};
+                
+                //Player walk animation
+                animationElapsed += elapsed;
+                if(moveRight && onFloor && animationElapsed > 1.0/framesPerSecond) {
+                    currentIndex++;
+                    animationElapsed = 0.0;
+                    if(currentIndex > numFrames-1) {
+                        currentIndex = 0;
+                    }
+                }
+                
+                DrawSpriteSheetSprite(&program, characterSheet, playerVertices, runAnimation[currentIndex], 8, 4);
+
+                if(moveJump) {
+                    onFloor = false;
+                    Mix_PlayChannel(-1, jumpSound, 0);
+                    accelerationY = 6.0;
+                    player2->velocity.y += accelerationY * FIXED_TIMESTEP;
+                }else if(moveDown) {
+                    accelerationY = 1.0f;
+                    player2->velocity.y -= accelerationY * FIXED_TIMESTEP;
+                }else if(moveLeft) {
+                    player2->velocity.x -= accelerationX * FIXED_TIMESTEP;
+                }else if(moveRight) {
+                    player2->velocity.x += accelerationX * FIXED_TIMESTEP;
+                }
+                
+                //modelMatrixPlayer2.Translate(0.0, -gravity2 * FIXED_TIMESTEP, 0.0);
+                //player2->position.y -= gravity2 * FIXED_TIMESTEP;
+                
+                player2->velocity.y = lerp(player2->velocity.y, 0.0f, FIXED_TIMESTEP * friction);
+                player2->velocity.x = lerp(player2->velocity.x, 0.0f, FIXED_TIMESTEP * friction);
+                
+                modelMatrixPlayer2.Translate(player2->velocity.x, player2->velocity.y, 0.0);
+                moveJump = false;
+                moveDown = false;
+                moveLeft = false;
+                moveRight = false;
+                
+                player2->position.y += player2->velocity.y;
+                
+                //Check player bottom and floor
+                if(!collisionYBot(*platform23, *player2)) {
+                    modelMatrixPlayer2.Translate(0.0, adjustY + 0.01, 0.0);
+                    player2->velocity.y = 0.0f;
+                    player2->position.y += adjustY + 0.01;
+                }
+                
+                player2->position.x += player2->velocity.x;
+                
+                //Check player right and right wall
+                if(!collisionXRight(*platform22, *player2)) {
+                    modelMatrixPlayer2.Translate(-adjustX + 0.01, 0.0, 0.0);
+                    player2->velocity.x = 0.0f;
+                    player2->position.x -= adjustX + 0.01;
+                }
+                
+                //Check player left and left wall
+                if(!collisionXLeft(*platform21, *player2)) {
+                    modelMatrixPlayer2.Translate(adjustX + 0.01, 0.0, 0.0);
+                    player2->velocity.x = 0.0f;
+                    player2->position.x += adjustX + 0.01;
+                }
+                
+                cout << "X: " << player2->position.x << " Y: " << player2->position.y << endl;
+                
+                //Check collision between player and saws
+                for(int i = 0; i < saw.size(); i++) {
+                    if(!collisionEntityEntity(saw[i], *player2)) {
+                        Mix_PlayChannel(-1, hitSound, 0);
+                        if(health == 0) {
+                            //dont subtract
+                        }else
+                            health -= 1;
+                    }
+                }
+                
+                //Check collision for moving saws
+                if(!collisionEntityEntity(*saw17, *player2)) {
+                    Mix_PlayChannel(-1, hitSound, 0);
+                    if(health == 0) {
+                        //dont subtract
+                    }else
+                        health -= 1;
+                }else if(!collisionEntityEntity(*saw18, *player2)) {
+                    Mix_PlayChannel(-1, hitSound, 0);
+                    if(health == 0) {
+                        //dont subtract
+                    }else
+                        health -= 1;
+                }else if(!collisionEntityEntity(*saw32, *player2)) {
+                    Mix_PlayChannel(-1, hitSound, 0);
+                    if(health == 0) {
+                        //dont subtract
+                    }else
+                        health -= 1;
+                }else if(!collisionEntityEntity(*saw33, *player2)) {
+                    Mix_PlayChannel(-1, hitSound, 0);
+                    if(health == 0) {
+                        //dont subtract
+                    }else
+                        health -= 1;
+                }
+                
+                //Saw setup
+                program.setModelMatrix(modelMatrixSaw);
+                float saw1f[] = {7.25, -12.5, 8.25, -12.5, 8.25, -11.5, 7.25, -12.5, 8.25, -11.5, 7.25, -11.5};
+                float saw2f[] = {8.25, -13.5, 9.25, -13.5, 9.25, -12.5, 8.25, -13.5, 9.25, -12.5, 8.25, -12.5};
+                float saw3f[] = {9.25, -14.5, 10.25, -14.5, 10.25, -13.5, 9.25, -14.5, 10.25, -13.5, 9.25, -13.5};
+                float saw4f[] = {10.25, -15.5, 11.25, -15.5, 11.25, -14.5, 10.25, -15.5, 11.25, -14.5, 10.25, -14.5};
+                DrawSingle(&program, saw1f, smallSawTexture);
+                DrawSingle(&program, saw2f, smallSawTexture);
+                DrawSingle(&program, saw3f, smallSawTexture);
+                DrawSingle(&program, saw4f, smallSawTexture);
+                
+                float saw5f[] = {7.25, -19.5, 8.25, -19.5, 8.25, -18.5, 7.25, -19.5, 8.25, -18.5, 7.25, -18.5};
+                float saw6f[] = {8.5, -19.5, 9.5, -19.5, 9.5, -18.5, 8.5, -19.5, 9.5, -18.5, 8.5, -18.5};
+                float saw7f[] = {10.5, -19.5, 11.5, -19.5, 11.5, -18.5, 10.5, -19.5, 11.5, -18.5, 10.5, -18.5};
+                float saw8f[] = {11.75, -19.5, 12.75, -19.5, 12.75, -18.5, 11.75, -19.5, 12.75, -18.5, 11.75, -18.5};
+                DrawSingle(&program, saw5f, smallSawTexture);
+                DrawSingle(&program, saw6f, smallSawTexture);
+                DrawSingle(&program, saw7f, smallSawTexture);
+                DrawSingle(&program, saw8f, smallSawTexture);
+                
+                float saw9f[] = {7.25, -22.5, 8.25, -22.5, 8.25, -21.5, 7.25, -22.5, 8.25, -21.5, 7.25, -21.5};
+                float saw10f[] = {8.5, -22.5, 9.5, -22.5, 9.5, -21.5, 8.5, -22.5, 9.5, -21.5, 8.5, -21.5};
+                float saw11f[] = {9.75, -22.5, 10.75, -22.5, 10.75, -21.5, 9.75, -22.5, 10.75, -21.5, 9.75, -21.5};
+                float saw12f[] = {11.75, -22.5, 12.75, -22.5, 12.75, -21.5, 11.75, -22.5, 12.75, -21.5, 11.75, -21.5};
+                DrawSingle(&program, saw9f, smallSawTexture);
+                DrawSingle(&program, saw10f, smallSawTexture);
+                DrawSingle(&program, saw11f, smallSawTexture);
+                DrawSingle(&program, saw12f, smallSawTexture);
+                
+                float saw13f[] = {7.25, -25.5, 8.25, -25.5, 8.25, -24.5, 7.25, -25.5, 8.25, -24.5, 7.25, -24.5};
+                float saw14f[] = {8.5, -25.5, 9.5, -25.5, 9.5, -24.5, 8.5, -25.5, 9.5, -24.5, 8.5, -24.5};
+                float saw15f[] = {9.75, -25.5, 10.75, -25.5, 10.75, -24.5, 9.75, -25.5, 10.75, -24.5, 9.75, -24.5};
+                float saw16f[] = {11.0, -25.5, 12.0, -25.5, 12.0, -24.5, 11.0, -25.5, 12.0, -24.5, 11.0, -24.5};
+                DrawSingle(&program, saw13f, smallSawTexture);
+                DrawSingle(&program, saw14f, smallSawTexture);
+                DrawSingle(&program, saw15f, smallSawTexture);
+                DrawSingle(&program, saw16f, smallSawTexture);
+                
+                //Moving saw 17
+                program.setModelMatrix(modelMatrixSaw17);
+                float saw17f[] = {7.25, -28.5, 8.25, -28.5, 8.25, -27.5, 7.25, -28.5, 8.25, -27.5, 7.25, -27.5};
+                DrawSingle(&program, saw17f, smallSawTexture);
+                
+                modelMatrixSaw17.Translate(saw17->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                saw17->position.x += saw17->velocity.x * FIXED_TIMESTEP;
+                
+                if(!collisionEnemyWorld(*invis10, *saw17)) {
+                    saw17->velocity.x *= -1;
+                }
+                if(saw17->position.x - saw17->size.x <= 6.75) {
+                    saw17->velocity.x *= -1;
+                }
+                
+                program.setModelMatrix(modelMatrixSaw18);
+                float saw18f[] = {11.75, -28.5, 12.75, -28.5, 12.75, -27.5, 11.75, -28.5, 12.75, -27.5, 11.75, -27.5};
+                DrawSingle(&program, saw18f, smallSawTexture);
+                
+                modelMatrixSaw18.Translate(saw18->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                saw18->position.x += saw18->velocity.x * FIXED_TIMESTEP;
+                
+                //Moving saw 18
+                if(!collisionEnemyWorld(*invis10, *saw18)) {
+                    saw18->velocity.x *= -1;
+                }
+                if(saw18->position.x + saw18->size.x >= 13.25) {
+                    saw18->velocity.x *= -1;
+                }
+                
+                program.setModelMatrix(modelMatrixSaw);
+                float saw19f[] = {11.75, -32.5, 12.75, -32.5, 12.75, -31.5, 11.75, -32.5, 12.75, -31.5, 11.75, -31.5};
+                DrawSingle(&program, saw19f, smallSawTexture);
+                
+                float saw20f[] = {10.75, -33.5, 11.75, -33.5, 11.75, -32.5, 10.75, -33.5, 11.75, -32.5, 10.75, -32.5};
+                DrawSingle(&program, saw20f, smallSawTexture);
+                
+                float saw21f[] = {9.75, -32.5, 10.75, -32.5, 10.75, -31.5, 9.75, -32.5, 10.75, -31.5, 9.75, -31.5};
+                DrawSingle(&program, saw21f, smallSawTexture);
+                
+                float saw22f[] = {8.5, -32.5, 9.5, -32.5, 9.5, -31.5, 8.5, -32.5, 9.5, -31.5, 8.5, -31.5};
+                DrawSingle(&program, saw22f, smallSawTexture);
+                
+                float saw23f[] = {8.0, -33.5, 9.0, -33.5, 9.0, -32.5, 8.0, -33.5, 9.0, -32.5, 8.0, -32.5};
+                DrawSingle(&program, saw23f, smallSawTexture);
+                
+                float saw24f[] = {8.0, -34.75, 9.0, -34.75, 9.0, -33.75, 8.0, -34.75, 9.0, -33.75, 8.0, -33.75};
+                DrawSingle(&program, saw24f, smallSawTexture);
+                
+                float saw25f[] = {8.0, -36.0, 9.0, -36.0, 9.0, -35.0, 8.0, -36.0, 9.0, -35.0, 8.0, -35.0};
+                DrawSingle(&program, saw25f, smallSawTexture);
+                
+                float saw26f[] = {7.25, -38.0, 8.25, -38.0, 8.25, -37.0, 7.25, -38.0, 8.25, -37.0, 7.25, -37.0};
+                //---
+                float saw27f[] = {8.25, -39.0, 9.25, -39.0, 9.25, -38.0, 8.25, -39.0, 9.25, -38.0, 8.25, -38.0};
+                float saw28f[] = {10.25, -39.0, 11.25, -39.0, 11.25, -38.0, 10.25, -39.0, 11.25, -38.0, 10.25, -38.0};
+                float saw29f[] = {10.25, -39.0, 11.25, -39.0, 11.25, -38.0, 10.25, -39.0, 11.25, -38.0, 10.25, -38.0};
+                float saw30f[] = {10.25, -40.25, 11.25, -40.25, 11.25, -39.25, 10.25, -40.25, 11.25, -39.25, 10.25, -39.25};
+                float saw31f[] = {10.25, -41.5, 11.25, -41.5, 11.25, -40.5, 10.25, -41.5, 11.25, -40.5, 10.25, -40.5};
+                DrawSingle(&program, saw26f, smallSawTexture);
+                DrawSingle(&program, saw27f, smallSawTexture);
+                DrawSingle(&program, saw28f, smallSawTexture);
+                DrawSingle(&program, saw29f, smallSawTexture);
+                DrawSingle(&program, saw30f, smallSawTexture);
+                DrawSingle(&program, saw31f, smallSawTexture);
+                
+                //Moving saw 32
+                program.setModelMatrix(modelMatrixSaw32);
+                float saw32f[] = {7.25, -43.5, 8.25, -43.5, 8.25, -42.5, 7.25, -43.5, 8.25, -42.5, 7.25, -42.5};
+                DrawSingle(&program, saw32f, smallSawTexture);
+                
+                modelMatrixSaw32.Translate(saw32->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                saw32->position.x += saw32->velocity.x * FIXED_TIMESTEP;
+                
+                if(!collisionEnemyWorld(*invis11, *saw32)) {
+                    saw32->velocity.x *= -1;
+                }
+                if(saw32->position.x - saw32->size.x <= 6.75) {
+                    saw32->velocity.x *= -1;
+                }
+                
+                 //Moving saw 33
+                program.setModelMatrix(modelMatrixSaw33);
+                float saw33f[] = {11.75, -43.5, 12.75, -43.5, 12.75, -42.5, 11.75, -43.5, 12.75, -42.5, 11.75, -42.5};
+                DrawSingle(&program, saw33f, smallSawTexture);
+                
+                modelMatrixSaw33.Translate(saw33->velocity.x * FIXED_TIMESTEP, 0.0, 0.0);
+                saw33->position.x += saw33->velocity.x * FIXED_TIMESTEP;
+                
+                if(!collisionEnemyWorld(*invis11, *saw33)) {
+                    saw33->velocity.x *= -1;
+                }
+                if(saw33->position.x + saw33->size.x >= 13.25) {
+                    saw33->velocity.x *= -1;
+                }
+                
+                //Ruby setup
+                program.setModelMatrix(modelMatrixRuby);
+                
+                animationElapsedRuby += elapsed * 0.5;
+                if(animationElapsedRuby > 1.0/framesPerSecondRuby) {
+                    currentIndexRuby++;
+                    animationElapsedRuby = 0.0;
+                    if(currentIndexRuby > numFramesRuby-1) {
+                        currentIndexRuby = 0;
+                    }
+                }
+                
+                float rubyVertices23[] = {11.15, -32.0, 11.4, -31.75, 11.15, -31.75, 11.4, -31.75, 11.15, -32.0, 11.4, -32.0};
+                if(item23->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices23, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item23, *player2) && item23->alive) {
+                    item23->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices24[] = {7.5, -33.0, 7.75, -32.75, 7.5, -32.75, 7.75, -32.75, 7.5, -33.0, 7.75, -33.0};
+                if(item24->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices24, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item24, *player2) && item24->alive) {
+                    item24->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices25[] = {7.5, -34.0, 7.75, -33.75, 7.5, -33.75, 7.75, -33.75, 7.5, -34.0, 7.75, -34.0};
+                if(item25->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices25, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item25, *player2) && item25->alive) {
+                    item25->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices26[] = {7.5, -35.0, 7.75, -34.75, 7.5, -34.75, 7.75, -34.75, 7.5, -35.0, 7.75, -35.0};
+                if(item26->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices26, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item26, *player2) && item26->alive) {
+                    item26->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                float rubyVertices27[] = {7.5, -36.0, 7.75, -35.75, 7.5, -35.75, 7.75, -35.75, 7.5, -36.0, 7.75, -36.0};
+                if(item27->alive != false) {
+                    DrawSpriteSheetSprite(&program, rubyTexture, rubyVertices27, runAnimationRuby[currentIndexRuby], 7, 1);
+                }
+                
+                if(!collisionItemEntity(*item27, *player2) && item27->alive) {
+                    item27->alive = false;
+                    Mix_PlayChannel(-1, pickUpSound, 0);
+                    score += 100;
+                }
+                
+                //Scroll view
+                viewMatrix.identity();
+                viewMatrix.Translate(-player2->position.x, -player2->position.y+2, 0);
+                program.setViewMatrix(viewMatrix);
                 
             break;
             }
             /*
             case STATE_GAME_END:
-                
+             
                 modelScore.Translate(-1.2, 0.0, 0.0);
                 //program.setModelMatrix(modelScore);
                 DrawText(&program, fontTexture, "Game Over!", 0.3, 0.0);
@@ -1688,6 +2475,47 @@ int main(int argc, char *argv[])
     delete fire5;
     delete fire6;
     delete fire7;
+    
+    //Level 2
+    delete player2;
+    delete platform21;
+    delete platform22;
+    delete platform23;
+    delete saw1;
+    delete saw2;
+    delete saw3;
+    delete saw4;
+    delete saw5;
+    delete saw6;
+    delete saw7;
+    delete saw8;
+    delete saw9;
+    delete saw10;
+    delete saw11;
+    delete saw12;
+    delete saw13;
+    delete saw14;
+    delete saw15;
+    delete saw16;
+    delete saw17;
+    delete saw18;
+    delete saw19;
+    delete saw20;
+    delete saw21;
+    delete saw22;
+    delete saw23;
+    delete saw24;
+    delete saw25;
+    delete saw26;
+    delete saw32;
+    delete saw33;
+    delete invis10;
+    delete invis11;
+    delete item23;
+    delete item24;
+    delete item25;
+    delete item26;
+    delete item27;
     
     SDL_Quit();
     return 0;
