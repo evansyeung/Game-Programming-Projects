@@ -902,7 +902,7 @@ int main(int argc, char *argv[])
     modelMatrixPause2.Translate(-2.5, 0.5, 0.0);
     modelMatrixPressButton.Translate(-2.2, -1.0, 0.0);
     modelMatrixGameOver.Translate(-1.5, 0.5, 0.0);
-    modelMatrixWin.Translate(-1.5, 0.5, 0.0);
+    modelMatrixWin.Translate(-1.0, 0.5, 0.0);
     modelMatrixEndScore.Translate(-1.25, -.25, 0.0);
     
     //Reposition score/health
@@ -1517,27 +1517,27 @@ int main(int argc, char *argv[])
     Entity* saw30 = new Entity(saw30Position, saw30Velocity, saw30Size);
     
     Vector3 saw32Position(7.75, -43.0, 0.0f);
-    Vector3 saw32Velocity(2.0f, 0.0f, 0.0f);
+    Vector3 saw32Velocity(1.75f, 0.0f, 0.0f);
     Vector3 saw32Size(0.75f, 0.75f, 0.0f);
     Entity* saw32 = new Entity(saw32Position, saw32Velocity, saw32Size);
     
     Vector3 saw33Position(12.25, -43.0, 0.0f);
-    Vector3 saw33Velocity(-2.0f, 0.0f, 0.0f);
+    Vector3 saw33Velocity(-1.75f, 0.0f, 0.0f);
     Vector3 saw33Size(0.75f, 0.75f, 0.0f);
     Entity* saw33 = new Entity(saw33Position, saw33Velocity, saw33Size);
     
     Vector3 saw34Position(7.25, -45.0, 0.0f);
-    Vector3 saw34Velocity(3.0f, 0.0f, 0.0f);
+    Vector3 saw34Velocity(2.75f, 0.0f, 0.0f);
     Vector3 saw34Size(0.75f, 0.75f, 0.0f);
     Entity* saw34 = new Entity(saw34Position, saw34Velocity, saw34Size);
     
     Vector3 saw35Position(12.25, -46.25, 0.0f);
-    Vector3 saw35Velocity(-3.0f, 0.0f, 0.0f);
+    Vector3 saw35Velocity(-2.75f, 0.0f, 0.0f);
     Vector3 saw35Size(0.75f, 0.75f, 0.0f);
     Entity* saw35 = new Entity(saw35Position, saw35Velocity, saw35Size);
     
     Vector3 saw36Position(10.15, -53.0, 0.0f);
-    Vector3 saw36Velocity(0.0f, -3.0f, 0.0f);
+    Vector3 saw36Velocity(0.0f, -3.5f, 0.0f);
     Vector3 saw36Size(0.75f, 0.75f, 0.0f);
     Entity* saw36 = new Entity(saw36Position, saw36Velocity, saw36Size);
     
@@ -2711,12 +2711,20 @@ int main(int argc, char *argv[])
                 if(player->position.x >= 52.0 && player->position.y <= -9.5) {
                     state = STATE_PAUSE1;
                 }else if(player->position.x >= 12.5 && player->position.x <= 16.5 && player->position.y <= -9.5) {
+                    Mix_FadeOutMusic(2500);
+                    Mix_PlayChannel(-1, loseSound, 0);
                     state = STATE_GAME_END;
                 }else if(player->position.x >= 35.7 && player->position.x <= 37.25 && player->position.y <= -9.5) {
+                    Mix_FadeOutMusic(2500);
+                    Mix_PlayChannel(-1, loseSound, 0);
                     state = STATE_GAME_END;
                 }else if(player->position.x >= 40.25 && player->position.x <= 43.7 && player->position.y <= -9.5) {
+                    Mix_FadeOutMusic(2500);
+                    Mix_PlayChannel(-1, loseSound, 0);
                     state = STATE_GAME_END;
                 }else if(player->position.x >= 48.75 && player->position.x <= 51.65 && player->position.y <= -9.5) {
+                    Mix_FadeOutMusic(2500);
+                    Mix_PlayChannel(-1, loseSound, 0);
                     state = STATE_GAME_END;
                 }
         
@@ -3808,7 +3816,7 @@ int main(int argc, char *argv[])
                 
                 viewMatrix.identity();
                 program.setModelMatrix(modelMatrixWin);
-                DrawText(&program, fontTexture, "Game Over!", 0.3, 0.0);
+                DrawText(&program, fontTexture, "Win!", 0.3, 0.0);
                 
                 program.setModelMatrix(modelMatrixEndScore);
                 DrawText(&program, fontTexture, "Score: "+to_string(score), 0.2, 0.0);
