@@ -2217,7 +2217,7 @@ int main(int argc, char *argv[])
                     enemy2->velocity.x *= -1;
                 }
                 
-                //Enemy3 setup
+                //Enemy3 setup AI
                 program.setModelMatrix(modelMatrixEnemy3);
                 
                 float playerVerticesEnemy3[] = {26.0, -4.5, 26.5, -4.0, 26.0, -4.0, 26.5, -4.0, 26.0, -4.5, 26.5, -4.5};
@@ -3498,7 +3498,7 @@ int main(int argc, char *argv[])
                         health -= 1;
                 }
                 
-                cout << "X: " << player3->position.x << " Y: " << player3->position.y << endl;
+                //cout << "X: " << player3->position.x << " Y: " << player3->position.y << endl;
                 
                 //Platform setup
                 //Moving box1
@@ -3794,7 +3794,7 @@ int main(int argc, char *argv[])
                 
                 //Scroll view
                 viewMatrix.identity();
-                viewMatrix.Translate(-player3->position.x, -player3->position.y, 0);
+                viewMatrix.Translate(-player3->position.x, -player3->position.y-1, 0);
                 program.setViewMatrix(viewMatrix);
 
                 break;
