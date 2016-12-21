@@ -1537,7 +1537,7 @@ int main(int argc, char *argv[])
     Entity* saw35 = new Entity(saw35Position, saw35Velocity, saw35Size);
     
     Vector3 saw36Position(10.15, -53.0, 0.0f);
-    Vector3 saw36Velocity(0.0f, -3.5f, 0.0f);
+    Vector3 saw36Velocity(0.0f, -3.4f, 0.0f);
     Vector3 saw36Size(0.75f, 0.75f, 0.0f);
     Entity* saw36 = new Entity(saw36Position, saw36Velocity, saw36Size);
     
