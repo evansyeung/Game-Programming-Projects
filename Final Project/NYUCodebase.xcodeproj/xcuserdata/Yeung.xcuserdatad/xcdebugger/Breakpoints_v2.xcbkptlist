@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NYUCodebase/main.cpp"
-            timestampString = "503961131.470116"
+            timestampString = "503996614.076969"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "267"
-            endingLineNumber = "267">
+            startingLineNumber = "411"
+            endingLineNumber = "411">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -24,11 +24,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NYUCodebase/main.cpp"
-            timestampString = "503961131.470116"
+            timestampString = "503996614.076969"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "532"
-            endingLineNumber = "532"
+            startingLineNumber = "742"
+            endingLineNumber = "742"
             landmarkName = "collisionXRight(Platform world, Entity player)"
             landmarkType = "9">
          </BreakpointContent>
@@ -40,11 +40,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NYUCodebase/main.cpp"
-            timestampString = "503963857.283471"
+            timestampString = "504001434.312364"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1539"
-            endingLineNumber = "1539"
+            startingLineNumber = "2054"
+            endingLineNumber = "2054"
             landmarkName = "main(int argc, char *argv[])"
             landmarkType = "9">
          </BreakpointContent>
@@ -56,11 +56,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NYUCodebase/main.cpp"
-            timestampString = "503963857.283471"
+            timestampString = "504001434.312364"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1856"
-            endingLineNumber = "1856"
+            startingLineNumber = "2371"
+            endingLineNumber = "2371"
             landmarkName = "main(int argc, char *argv[])"
             landmarkType = "9">
          </BreakpointContent>
@@ -72,11 +72,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NYUCodebase/main.cpp"
-            timestampString = "503961131.470116"
+            timestampString = "503996614.076969"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "423"
-            endingLineNumber = "423"
+            startingLineNumber = "610"
+            endingLineNumber = "610"
             landmarkName = "DrawSingle(ShaderProgram *program, float vertices[], GLuint texture)"
             landmarkType = "9">
          </BreakpointContent>
@@ -88,11 +88,55 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "NYUCodebase/main.cpp"
-            timestampString = "503964869.357009"
+            timestampString = "504001508.337938"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2981"
-            endingLineNumber = "2981"
+            startingLineNumber = "3953"
+            endingLineNumber = "3953"
+            landmarkName = "main(int argc, char *argv[])"
+            landmarkType = "9">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NYUCodebase/main.cpp"
+            timestampString = "503996614.076969"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "365"
+            endingLineNumber = "365">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NYUCodebase/main.cpp"
+            timestampString = "503996614.076969"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "364"
+            endingLineNumber = "364">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "NYUCodebase/main.cpp"
+            timestampString = "504001508.337938"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "3402"
+            endingLineNumber = "3402"
             landmarkName = "main(int argc, char *argv[])"
             landmarkType = "9">
          </BreakpointContent>

@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2E074CAF1E0A07AB00A6450A /* stone.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E074CAE1E0A07AB00A6450A /* stone.png */; };
+		2E074CB11E0A07AE00A6450A /* stoneHalf.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E074CB01E0A07AE00A6450A /* stoneHalf.png */; };
+		2E074CB31E0A0D3300A6450A /* winMusic.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2E074CB21E0A0D3300A6450A /* winMusic.wav */; };
+		2E074CB51E0A0D3A00A6450A /* loseMusic.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2E074CB41E0A0D3A00A6450A /* loseMusic.wav */; };
+		2E074CB71E0A11AD00A6450A /* Soliloquy.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2E074CB61E0A11AD00A6450A /* Soliloquy.wav */; };
+		2E074CB91E0A50DA00A6450A /* boxItemAlt.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E074CB81E0A50DA00A6450A /* boxItemAlt.png */; };
+		2E074CBB1E0A5DCD00A6450A /* boxCoinAlt.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E074CBA1E0A5DCD00A6450A /* boxCoinAlt.png */; };
 		2E07CEC61E07AC6C00869C63 /* CampFireFinished.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E07CEC51E07AC6B00869C63 /* CampFireFinished.png */; };
 		2E07CEC81E07B28A00869C63 /* SawSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 2E07CEC71E07B28A00869C63 /* SawSmall.png */; };
 		2E07CECA1E0857BF00869C63 /* jump.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2E07CEC91E0857BF00869C63 /* jump.wav */; };
@@ -40,6 +47,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2E074CAE1E0A07AB00A6450A /* stone.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stone.png; sourceTree = SOURCE_ROOT; };
+		2E074CB01E0A07AE00A6450A /* stoneHalf.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = stoneHalf.png; sourceTree = SOURCE_ROOT; };
+		2E074CB21E0A0D3300A6450A /* winMusic.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = winMusic.wav; sourceTree = SOURCE_ROOT; };
+		2E074CB41E0A0D3A00A6450A /* loseMusic.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = loseMusic.wav; sourceTree = SOURCE_ROOT; };
+		2E074CB61E0A11AD00A6450A /* Soliloquy.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = Soliloquy.wav; sourceTree = SOURCE_ROOT; };
+		2E074CB81E0A50DA00A6450A /* boxItemAlt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = boxItemAlt.png; sourceTree = SOURCE_ROOT; };
+		2E074CBA1E0A5DCD00A6450A /* boxCoinAlt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = boxCoinAlt.png; sourceTree = SOURCE_ROOT; };
 		2E07CEC51E07AC6B00869C63 /* CampFireFinished.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = CampFireFinished.png; sourceTree = SOURCE_ROOT; };
 		2E07CEC71E07B28A00869C63 /* SawSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = SawSmall.png; sourceTree = SOURCE_ROOT; };
 		2E07CEC91E0857BF00869C63 /* jump.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = jump.wav; sourceTree = SOURCE_ROOT; };
@@ -160,7 +174,14 @@
 				2E07CEE51E08DC8500869C63 /* buttonpress.wav */,
 				2E07CED11E085E1800869C63 /* Road_to_Dazir.wav */,
 				2E07CEE31E08989B00869C63 /* music_jewels.wav */,
+				2E074CB61E0A11AD00A6450A /* Soliloquy.wav */,
 				2E07CECF1E0858A300869C63 /* pickup.wav */,
+				2E074CB41E0A0D3A00A6450A /* loseMusic.wav */,
+				2E074CB21E0A0D3300A6450A /* winMusic.wav */,
+				2E074CAE1E0A07AB00A6450A /* stone.png */,
+				2E074CB01E0A07AE00A6450A /* stoneHalf.png */,
+				2E074CB81E0A50DA00A6450A /* boxItemAlt.png */,
+				2E074CBA1E0A5DCD00A6450A /* boxCoinAlt.png */,
 				2E07CEE11E0890CB00869C63 /* heart_empty.png */,
 				2E07CEDD1E08908600869C63 /* heart_full.png */,
 				2EB257711E05D9CA00600E95 /* pixel_font.png */,
@@ -259,10 +280,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2E074CB71E0A11AD00A6450A /* Soliloquy.wav in Resources */,
 				2E07CEC61E07AC6C00869C63 /* CampFireFinished.png in Resources */,
+				2E074CB91E0A50DA00A6450A /* boxItemAlt.png in Resources */,
 				2E07CEC81E07B28A00869C63 /* SawSmall.png in Resources */,
+				2E074CB31E0A0D3300A6450A /* winMusic.wav in Resources */,
 				2E07CECE1E08589E00869C63 /* firehit.wav in Resources */,
 				2E18E6CE1E04C1F9003E7609 /* platformertiles.png in Resources */,
+				2E074CB11E0A07AE00A6450A /* stoneHalf.png in Resources */,
+				2E074CAF1E0A07AB00A6450A /* stone.png in Resources */,
 				2E07CEE21E0890CB00869C63 /* heart_empty.png in Resources */,
 				2E07CED21E085E1800869C63 /* Road_to_Dazir.wav in Resources */,
 				2EB257741E05E70300600E95 /* ruby2.png in Resources */,
@@ -275,11 +301,13 @@
 				6D5A86C619AE5C710066C1FD /* Images.xcassets in Resources */,
 				6D5A86BE19AE5C710066C1FD /* Credits.rtf in Resources */,
 				2E07CECA1E0857BF00869C63 /* jump.wav in Resources */,
+				2E074CB51E0A0D3A00A6450A /* loseMusic.wav in Resources */,
 				6DEF23C41B96CC2600BCE792 /* vertex.glsl in Resources */,
 				2E07CECC1E08589900869C63 /* hit.wav in Resources */,
 				6DC7076A1BA7273500225B7D /* vertex_textured.glsl in Resources */,
 				2E07CEDE1E08908600869C63 /* heart_full.png in Resources */,
 				2E07CEE61E08DC8500869C63 /* buttonpress.wav in Resources */,
+				2E074CBB1E0A5DCD00A6450A /* boxCoinAlt.png in Resources */,
 				2EB257721E05D9CA00600E95 /* pixel_font.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
