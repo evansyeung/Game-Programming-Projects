@@ -1,3 +1,24 @@
+/*
+ Evans Yeung
+ Final Project
+ 
+ Instructions: 
+ -To start level 1 press any keys except for 2 or 3. For level 2 press 2 and the same for the level 3.
+ -To go back to main menu press esc while in a level.
+ -Controls include: Space (jump), Left-arrow, Right-arrow, and Down-arrow. No jump in level 2.
+ -Level 1 is a platformer just reach the other side of the map and jump down.
+ -Level 2 is a free fall stage.
+ -Level 3 is a platformer jumping challenge.
+ 
+ World map tiles were created through Tiled. All tile data are stored in an array. Entities, platforms, and items have seperate classes and manually placed onto the world map.
+ Enemy AI is based on invisible points on the map. Checks for collision between enemy and points. If collision reverse enemy velocity. Enemies have preset constant velocity.
+ Box elevator AI checks for player and box top collision. If collision, set player velocity = box velocity and move box. Box moves until it collides with an invisible point. 
+ Saw AI uses the same invisible point principles.
+ Box-Box collision so collision arent as accurate.
+ All pngs and wavs not found in the assets folder were taken from opengameart.org.
+ */
+
+
 #ifdef _WINDOWS
 #include <GL/glew.h>
 #endif
